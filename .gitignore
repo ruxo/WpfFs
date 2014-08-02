@@ -1,0 +1,5 @@
+Debug/
+obj/
+bin/
+*.swp
+*.suo

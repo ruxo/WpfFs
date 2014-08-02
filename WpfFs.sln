@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WpfFs", "WpfFs\WpfFs.fsproj", "{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WpfFsControls", "WpfFsControls\WpfFsControls.fsproj", "{662B6576-95B3-4B79-BB5B-4A9324D4334B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{662B6576-95B3-4B79-BB5B-4A9324D4334B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{662B6576-95B3-4B79-BB5B-4A9324D4334B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{662B6576-95B3-4B79-BB5B-4A9324D4334B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{662B6576-95B3-4B79-BB5B-4A9324D4334B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
