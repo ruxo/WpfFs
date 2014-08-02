@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Commands.fs" />
     <Compile Include="Wpf.fs" />
+    <Compile Include="Directives.fs" />
     <Compile Include="Controls.fs" />
     <None Include="app.config" />
   </ItemGroup>
@@ -66,6 +67,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />

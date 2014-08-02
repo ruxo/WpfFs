@@ -3,6 +3,7 @@
     xmlns:rzwpf="clr-namespace:RZ.Wpf.Controls;assembly=WpfFsControls"
     xmlns:model="clr-namespace:TestFs.Models;assembly=WpfFs"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=WpfFsControls"
     x:Class="TestFs.CodeBehind.AboutDialog"
     Width="12in" Height="8in"
     Title="About WPF 4 Unleashed"
@@ -15,22 +16,17 @@
   </Window.CommandBindings>
   <DockPanel >
     <TreeView DockPanel.Dock="Left" MinWidth="2in" HorizontalAlignment="Left">
-      <TreeViewItem Header="About sample">
-        <i:Interaction.Triggers>
-          <i:EventTrigger EventName="Selected">
-            <i:InvokeCommandAction Command="{Binding Path=RunAbout}" />
-          </i:EventTrigger>
-        </i:Interaction.Triggers>
+      <TreeViewItem Header="About sample" d:Evt.ToCommand="Selected -> RunAbout">
       </TreeViewItem>
       <TreeViewItem Header="Layouts">
         <TreeViewItem Header="Grid">
-          <TreeViewItem Header="Shared Size Group">
-            <i:Interaction.Triggers>
-              <i:EventTrigger EventName="Selected">
-                <i:InvokeCommandAction Command="{Binding Path=RunGridSharedSizeGroup}" />
-              </i:EventTrigger>
-            </i:Interaction.Triggers>
+          <TreeViewItem Header="Shared Size Group" d:Evt.ToCommand="Selected -> RunGridSharedSizeGroup">
           </TreeViewItem>
+        </TreeViewItem>
+      </TreeViewItem>
+      <TreeViewItem Header="Input Events">
+        <TreeViewItem Header="Routed Events">
+          <TreeViewItem Header="Bubble" d:Evt.ToCommand="Selected -> RunRoutedEventInAction" />
         </TreeViewItem>
       </TreeViewItem>
     </TreeView>
