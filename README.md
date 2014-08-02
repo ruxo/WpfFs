@@ -1,0 +1,1 @@
+Examples in this project come from the reference of book "WPF 4 Unleashed"
