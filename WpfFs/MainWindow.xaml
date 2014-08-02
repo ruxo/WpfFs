@@ -2,6 +2,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:rzwpf="clr-namespace:RZ.Wpf.Controls;assembly=WpfFsControls"
     xmlns:model="clr-namespace:TestFs.Models;assembly=WpfFs"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     x:Class="TestFs.CodeBehind.AboutDialog"
     Width="12in" Height="8in"
     Title="About WPF 4 Unleashed"
@@ -14,10 +15,22 @@
   </Window.CommandBindings>
   <DockPanel >
     <TreeView DockPanel.Dock="Left" MinWidth="2in" HorizontalAlignment="Left">
-      <TreeViewItem Header="About sample" />
+      <TreeViewItem Header="About sample">
+        <i:Interaction.Triggers>
+          <i:EventTrigger EventName="Selected">
+            <i:InvokeCommandAction Command="{Binding Path=RunAbout}" />
+          </i:EventTrigger>
+        </i:Interaction.Triggers>
+      </TreeViewItem>
       <TreeViewItem Header="Layouts">
         <TreeViewItem Header="Grid">
-          <TreeViewItem Header="Shared Size Group" />
+          <TreeViewItem Header="Shared Size Group">
+            <i:Interaction.Triggers>
+              <i:EventTrigger EventName="Selected">
+                <i:InvokeCommandAction Command="{Binding Path=RunGridSharedSizeGroup}" />
+              </i:EventTrigger>
+            </i:Interaction.Triggers>
+          </TreeViewItem>
         </TreeViewItem>
       </TreeViewItem>
     </TreeView>

@@ -7,6 +7,22 @@ open System.Xaml
 open System.Windows.Markup
 open System.Linq
 
+open System.ComponentModel
+
+type ViewModelBase() =
+    let propertyChangedEvent = new DelegateEvent<PropertyChangedEventHandler>()
+    interface INotifyPropertyChanged with
+        [<CLIEvent>]
+        member x.PropertyChanged = propertyChangedEvent.Publish
+
+    member x.OnPropertyChanged propertyName = 
+        propertyChangedEvent.Trigger([| x; new PropertyChangedEventArgs(propertyName) |])
+        
+    member self.setValue(field : byref<_>, value, [<ParamArray>] fieldNames: string[]) =
+            if field = value then ()
+            else field <- value
+                 Array.iter self.OnPropertyChanged fieldNames
+
 type IXamlConnector =
     abstract Ready : unit -> unit
 
