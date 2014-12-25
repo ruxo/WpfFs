@@ -4,7 +4,6 @@
     xmlns:model="clr-namespace:TestFs.Models;assembly=WpfFs"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=WpfFsControls"
-    x:Class="TestFs.CodeBehind.AboutDialog"
     Width="12in" Height="8in"
     Title="About WPF 4 Unleashed"
     >

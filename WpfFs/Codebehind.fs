@@ -1,12 +1,14 @@
-﻿namespace TestFs.CodeBehind
+﻿namespace WpfFs.UI
 
 open System.Windows
 open System.Windows.Controls
 open System.Windows.Media
 open System.Windows.Input
 
-type AboutDialog() =
+type MainWindow() as me =
     inherit System.Windows.Window()
+
+    do RZ.Wpf.XamlLoader.loadFromResource ("WpfFs.g.resources", "mainwindow.xaml") (Some me) |> ignore
 
     member this.HelpCanExecute(sender:obj, e:CanExecuteRoutedEventArgs) = e.CanExecute <- true
 

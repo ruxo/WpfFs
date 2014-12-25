@@ -4,37 +4,15 @@ open System.Threading.Tasks
 open System.Windows
 open System.Windows.Threading
 
-let startWindow (result: obj) =
-    let root = RZ.Wpf.XamlLoader.LoadWpfFromFile "MainWindow.xaml" :?> Window
+open WpfFs.UI
 
-    let dispatcher = Dispatcher.CurrentDispatcher
-
-    let action = Action(fun () -> 
-                            let dispatcherResult = result :?> TaskCompletionSource<Dispatcher>
-                            dispatcherResult.SetResult dispatcher
-                       )
-    ignore <| dispatcher.BeginInvoke(action, null)
-    ignore <| Application().Run root
-
-let startWindowInThread() =
-    let result = TaskCompletionSource<Dispatcher>()
-
-    let winThread = Thread(fun() -> startWindow result)
-    winThread.SetApartmentState ApartmentState.STA
-    winThread.Start()
-
-    result.Task
-
+[<STAThread>]
 [<EntryPoint>]
-let main argv = 
-    let winTask = startWindowInThread()
-    let dispatcher = winTask.Result
-
-    let shutdownWait = TaskCompletionSource<bool>()
-    dispatcher.ShutdownFinished.Add(fun _ -> shutdownWait.SetResult true)
-
+let main _ = 
     printfn "Window is started"
-    shutdownWait.Task.Wait()
+    let win = MainWindow()
+
+    let ret = Application().Run(win)
 
     printfn "Finished."
-    0
+    ret

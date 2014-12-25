@@ -9,7 +9,6 @@ let dispose d = (d:IDisposable).Dispose()
 module Assembly =
     open System.Reflection
 
-    let getExecutingAssembly() = Assembly.GetExecutingAssembly()
     let getManifestResourceStream resourceName asm = (asm:Assembly).GetManifestResourceStream(resourceName)
 
 module DirInfo =

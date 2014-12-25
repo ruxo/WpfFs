@@ -62,9 +62,7 @@
     <Compile Include="Codebehind.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
-    <Content Include="MainWindow.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="MainWindow.xaml" />
     <Content Include="AboutDialog.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

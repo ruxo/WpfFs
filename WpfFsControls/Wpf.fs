@@ -219,7 +219,13 @@ module XamlLoader =
         LoadWpfInternal xamlContent rootObject
 
     let loadFromResource(resourceUri, resourceName) rootObj =
-        use stream = Assembly.getExecutingAssembly() |> Assembly.getManifestResourceStream resourceUri 
+        let mainAssembly = System.Reflection.Assembly.GetEntryAssembly()
+        use stream = mainAssembly |> Assembly.getManifestResourceStream resourceUri 
+        if stream = null then
+            failwithf """Cannot find resource %s in %s\
+                         Available resources are:\
+                         \t%s
+                      """ resourceUri mainAssembly.FullName (String.Join("\n\t", mainAssembly.GetManifestResourceNames()))
         let resource =
             new System.Resources.ResourceReader(stream) :> Collections.IEnumerable
             |> Seq.cast :> seq<Collections.DictionaryEntry>
