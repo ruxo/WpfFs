@@ -19,7 +19,7 @@ type Ng() =
     static member SetBlockMark(el: DependencyObject, value: bool) =
         match el with
         | :? UIElement as ui -> if value then
-                                    ui.MouseRightButtonDown.AddHandler(Input.MouseButtonEventHandler(onMouseRightButtonDown))
+                                    ui.AddHandler(UIElement.MouseRightButtonDownEvent, Input.MouseButtonEventHandler(onMouseRightButtonDown), true)
                                 else
-                                    ui.MouseRightButtonDown.RemoveHandler(Input.MouseButtonEventHandler(onMouseRightButtonDown))
+                                    ui.RemoveHandler(UIElement.MouseRightButtonDownEvent, Input.MouseButtonEventHandler(onMouseRightButtonDown))
         | _ -> ()

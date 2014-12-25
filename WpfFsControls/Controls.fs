@@ -2,11 +2,28 @@
 
 open System
 open System.Linq
+open System.ComponentModel
 open System.Windows
-open System.Windows.Media
+open System.Windows.Controls
 
-type public Inclusion() = 
+type public Inclusion() as me = 
     inherit System.Windows.Controls.Panel()
+
+    let loadUiElement filename =
+        match RZ.Wpf.XamlLoader.LoadWpf filename with
+        | :? UIElement as ele -> Some ele
+        | _ -> None
+
+    let loadXamlRuntimeMode filename (this: Inclusion) =
+        this.Children.Clear()
+        match loadUiElement filename with
+        | None -> ()
+        | Some ui -> ignore <| this.Children.Add ui
+                   
+    let loadXamlDesignMode filename (this: Inclusion) =
+        ignore (this.Children.Add <| Label(Content = filename))
+
+    let loadXamlTo = if DesignerProperties.GetIsInDesignMode(me) then loadXamlDesignMode else loadXamlRuntimeMode
 
     static let OnXamlChanged (o: DependencyObject) (e: DependencyPropertyChangedEventArgs) =
         match o with
@@ -14,9 +31,7 @@ type public Inclusion() =
                                   let value = e.NewValue :?> string
                                   if value <> null then
                                       try
-                                          match RZ.Wpf.XamlLoader.LoadWpf(value) :?> UIElement with
-                                          | null -> ()
-                                          | newChild -> ignore <| this.Children.Add(newChild)
+                                          this.LoadXamlTo value this
                                       with
                                       | :? System.IO.FileNotFoundException ->
                                           let error = sprintf "Cannot find %s in %s." (value) (System.IO.Directory.GetCurrentDirectory())
@@ -27,6 +42,8 @@ type public Inclusion() =
                                     FrameworkPropertyMetadata(PropertyChangedCallback(OnXamlChanged))
                               )
     static member XamlProperty with get() = xamlProperty
+
+    member private me.LoadXamlTo = loadXamlTo
 
     member this.Xaml with get() = this.GetValue(Inclusion.XamlProperty) :?> string
                      and  set (value: string) = this.SetValue(Inclusion.XamlProperty, value)
