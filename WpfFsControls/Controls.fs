@@ -10,7 +10,7 @@ type public Inclusion() as me =
     inherit System.Windows.Controls.Panel()
 
     let loadUiElement filename =
-        match RZ.Wpf.XamlLoader.LoadWpf filename with
+        match RZ.Wpf.XamlLoader.LoadWpfFromFile filename with
         | :? UIElement as ele -> Some ele
         | _ -> None
 

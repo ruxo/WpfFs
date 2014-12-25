@@ -1,4 +1,5 @@
 ﻿namespace RZ.Wpf
+// v20140921
 
 open System
 open System.Collections.Specialized
@@ -8,6 +9,18 @@ open System.Xaml
 open System.Windows
 open System.Windows.Markup
 open System.Linq
+open RZ.NetWrapper
+
+module DispatcherTimer =
+    open System.Windows.Threading
+
+    let create period = DispatcherTimer(Interval=period)
+    let start timer = (timer:DispatcherTimer).Start()
+    let startTimer period handler =
+        let t = create period
+        let r = t.Tick |> Observable.subscribe handler
+        start t
+        { new IDisposable with member me.Dispose() = r.Dispose(); t.Stop() }
 
 // ------------------------- View Model ------------------------- //
 type ViewModelBase() =
@@ -145,14 +158,20 @@ type WpfObservableCollection<'T>() as this =
 type IXamlConnector =
     abstract Ready : unit -> unit
 
-type XamlLoader() =
-    static let locateType (typeName) =
+[<RequireQualifiedAccess>]
+module XamlLoader =
+    let private toMap(fkey, fvalue) (me: seq<'T>) =
+        me
+        |> Seq.map (fun x -> (fkey x, fvalue x))
+        |> Map.ofSeq
+
+    let locateType (typeName) =
         AppDomain.CurrentDomain.GetAssemblies().AsParallel()
         |> Seq.map (fun asm -> asm.GetType(typeName))
         |> Seq.filter (fun t -> t <> null)
         |> Seq.head
 
-    static let getRootObject (xaml) =
+    let private getRootObject (xaml) =
         let xml = XElement.Parse(xaml)
         let clsName = XName.Get("Class", "http://schemas.microsoft.com/winfx/2006/xaml")
         let attr = xml.Attribute(clsName)
@@ -163,14 +182,11 @@ type XamlLoader() =
             | null     -> failwithf "Type %s not found." attr.Value
             | rootType -> Some <| Activator.CreateInstance(rootType)
 
-    static member private LoadWpfInternal(xamlContent, rootObject: obj option) =
-        let stream = new StringReader(xamlContent)
-        use reader = new XamlXmlReader(stream, XamlReader.GetWpfSchemaContext())
-
+    let private loadStreamInternal(reader: XamlXmlReader, rootObject) =
         let writerSettings = XamlObjectWriterSettings()
         let connector = match rootObject with
                         | Some root -> writerSettings.RootObjectInstance <- root
-                                       match root with
+                                       match (root :> obj) with
                                        | :? IXamlConnector as c -> Some c
                                        | _ -> None
                         | None      -> None
@@ -189,17 +205,28 @@ type XamlLoader() =
             ignore <| Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(action)
         result
 
-    static member LoadWpf xamlFilename =
+    let private LoadWpfInternal xamlContent rootObject =
+        let stream = new StringReader(xamlContent)
+        use reader = new XamlXmlReader(stream, XamlReader.GetWpfSchemaContext())
+        loadStreamInternal(reader, rootObject)
+
+    let loadWpfFromString xamlBody = LoadWpfInternal xamlBody (getRootObject(xamlBody))
+    let LoadWpfFromFile xamlFilename = loadWpfFromString <| File.ReadAllText(xamlFilename)
+
+    let LoadWpf xamlFilename rootObject = 
         let xamlContent = File.ReadAllText(xamlFilename)
-        let rootObject = getRootObject(xamlContent)
 
-        XamlLoader.LoadWpfInternal(xamlContent, rootObject)
+        LoadWpfInternal xamlContent rootObject
 
-    static member LoadWpf(xamlFilename, rootObject: obj option) = 
-        let xamlContent = File.ReadAllText(xamlFilename)
-
-        XamlLoader.LoadWpfInternal(xamlContent, rootObject)
-
+    let loadFromResource(resourceUri, resourceName) rootObj =
+        use stream = Assembly.getExecutingAssembly() |> Assembly.getManifestResourceStream resourceUri 
+        let resource =
+            new System.Resources.ResourceReader(stream) :> Collections.IEnumerable
+            |> Seq.cast :> seq<Collections.DictionaryEntry>
+            |> toMap ((fun x -> x.Key :?> string), (fun x -> x.Value))
+        let xamlRaw = resource.[resourceName] :?> Stream
+        use reader = new XamlXmlReader(xamlRaw, XamlReader.GetWpfSchemaContext())
+        loadStreamInternal(reader, rootObj)
 
 // ------------------------- DataContext method binder ------------------------- //
 type DCMethodExtension(methodName: string) =

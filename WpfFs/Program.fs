@@ -1,18 +1,11 @@
 ﻿open System
-open System.IO
 open System.Threading
 open System.Threading.Tasks
 open System.Windows
 open System.Windows.Threading
-open System.Windows.Controls
-open System.Windows.Markup
-open System.Xaml
-open System.Xml.Linq
 
 let startWindow (result: obj) =
-    let wpf = RZ.Wpf.XamlLoader.LoadWpf "MainWindow.xaml"
-
-    let root = wpf :?> Window
+    let root = RZ.Wpf.XamlLoader.LoadWpfFromFile "MainWindow.xaml" :?> Window
 
     let dispatcher = Dispatcher.CurrentDispatcher
 

@@ -1,4 +1,5 @@
-﻿namespace Utils.Avalon
+﻿namespace RZ.Wpf
+// v20140819
 
 open System
 open System.Collections.Generic
@@ -12,11 +13,12 @@ type private Evaluator = delegate of string * obj[] -> obj
 type private EvaluatorFactory() =
     member this.Create(script: string) =
         let cp = CompilerParameters(GenerateInMemory = true)
-        (*  // remove this comment if you want to use other classes in the expression..
+
+        #if REFALL  // define this if you want to use all known types in the expression..
         AppDomain.CurrentDomain.GetAssemblies()
         |> Seq.filter (fun asm -> (not asm.IsDynamic) && IO.File.Exists(asm.Location))
         |> Seq.iter (fun asm -> ignore <| cp.ReferencedAssemblies.Add(asm.Location))
-        *)
+        #endif
 
         let codeProvider = new Microsoft.JScript.JScriptCodeProvider()
         let results = codeProvider.CompileAssemblyFromSource(cp, script)
@@ -66,17 +68,8 @@ class Eval{
 
     static let dcs = Dictionary<FrameworkElement, DC>()
 
-    static let getDC(element: DependencyObject) =
-        let getContext() = (element :?> FrameworkElement).DataContext
-        if element.Dispatcher.CheckAccess() then
-            getContext()
-        else
-            element.Dispatcher.Invoke(getContext)
-
     let mutable updaterList = []
-    let elementType = element.GetType()
-
-    let onValueChanged (s:obj) (args: PropertyChangedEventArgs) = this.updateValue()
+    let onValueChanged (s:obj) (args: PropertyChangedEventArgs) = this.UpdateValue()
 
     let subscribePropertyChanged(ctx: obj) =
         match ctx with
@@ -90,37 +83,82 @@ class Eval{
     do element.DataContextChanged.AddHandler(
         fun _ args ->
             unsubscribePropertyChanged(args.OldValue)
-            this.updateValue()
+            this.UpdateValue()
             subscribePropertyChanged(args.NewValue)
         )
+
+    static let defaultValue propType = if (propType:Type).IsValueType then Activator.CreateInstance(propType) else null
+    let eval ctx propType expr =
+        match evaluator.Invoke(expr, ctx) with
+        | null -> defaultValue propType
+        | value when propType.IsAssignableFrom(value.GetType()) -> value
+        | :? string as value -> TypeDescriptor.GetConverter(propType).ConvertFromInvariantString(value)
+        | value -> TypeDescriptor.GetConverter(propType).ConvertFrom(value)
 
     static member SetExpression(element: DependencyObject, value: string) =
         let property, expr = match value.Split([|"->"|], StringSplitOptions.None) with
                              | [| p; expr |] -> p.Trim(), expr.Trim()
                              | _ -> failwith "Invalid expression"
-        let fe = element :?> FrameworkElement
+        let dc = let fe = element :?> FrameworkElement
+                 match dcs.TryGetValue(fe) with
+                 | false, _ -> let newDC = DC(fe)
+                               dcs.[fe] <- newDC
+                               newDC
+                 | true, currentDC -> currentDC
+
+        let et = element.GetType()
+
+        match et.GetProperty(property) with
+        | null -> failwithf "Unrecognize property %s" property
+        | ep -> dc.AddWatch(ep, expr.Replace('`','"'))
+        dc.UpdateValue(property)
+
+    member me.AddWatch(property, expr) =
+        updaterList <- (property, expr)::updaterList
+
+        subscribePropertyChanged <| me.GetContext()
+
+    member me.Evaluate propType expr = match me.GetContext() with
+                                       | null -> defaultValue propType
+                                       | ctx -> eval ctx propType expr
+    member me.GetContext() =
+        let getContext() = element.DataContext
+        if element.Dispatcher.CheckAccess() then
+            getContext()
+        else
+            element.Dispatcher.Invoke(getContext)
+
+    member me.UpdateValue(?property) = 
+        match me.GetContext() with
+        | null -> ()
+        | ctx -> 
+            match property with
+            | None -> updaterList
+            | Some name -> updaterList |> List.filter (fun (ep,_) -> ep.Name = name)
+            |> List.iter (fun (ep, expr) -> 
+                            let value = eval ctx ep.PropertyType expr
+                            let action = Action(fun() -> ep.SetValue(element, value))
+                            ignore <| element.Dispatcher.BeginInvoke(action))
+
+open System.Windows.Markup
+type DCExpression(expr: string) =
+    inherit MarkupExtension()
+
+    static let dcs = Dictionary<FrameworkElement, DC>()
+
+    override me.ProvideValue(serviceProvider) =
+        let targetService = serviceProvider.GetService(typeof<IProvideValueTarget>) :?> IProvideValueTarget
+        let fe = targetService.TargetObject :?> FrameworkElement
+        let dp = targetService.TargetProperty :?> DependencyProperty
+        let property = let et = fe.GetType()
+                       et.GetProperty(dp.Name)
+
         let dc = match dcs.TryGetValue(fe) with
                  | false, _ -> let newDC = DC(fe)
                                dcs.[fe] <- newDC
                                newDC
                  | true, currentDC -> currentDC
-        dc.addWatch(property, expr)
-        dc.updateValue(property)
 
-    member private this.addWatch(property, expr) =
-        match elementType.GetProperty(property) with
-        | null -> failwithf "Unrecognize property %s" property
-        | ep -> updaterList <- (ep, expr)::updaterList
-
-    member private this.updateValue(?property) = 
-        match getDC(element) with
-        | null -> ()
-        | ctx -> 
-            let list = match property with
-                       | None -> updaterList
-                       | Some name -> updaterList |> List.filter (fun (ep,_) -> ep.Name = name)
-            list
-            |> List.iter (fun (ep, expr) -> 
-                            let value = evaluator.Invoke(expr, ctx)
-                            let action = Action(fun() -> ep.SetValue(element, value))
-                            ignore <| element.Dispatcher.BeginInvoke(action))
+        let converted = expr.Replace('`', '"')
+        dc.AddWatch(property, converted)
+        dc.Evaluate dp.PropertyType converted
