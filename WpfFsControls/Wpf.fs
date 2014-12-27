@@ -11,6 +11,51 @@ open System.Windows.Markup
 open System.Linq
 open RZ.NetWrapper
 
+module Utils = 
+    let memoize (f: 'a -> 'b) =
+        let dict = System.Collections.Concurrent.ConcurrentDictionary<'a,'b>()
+
+        let memoizedFunc input =
+            match dict.TryGetValue input with
+            | true, x -> x
+            | false, _ ->
+                let answer = f input
+                dict.TryAdd(input, answer) |> ignore
+                answer
+        memoizedFunc
+
+(******************* Resources ************************)
+module ResourceManager =
+    open System.Reflection
+
+    [<NoComparison>]
+    type AssemblyResourceCacheEntry = { assembly: Assembly
+                                        resource: string }
+
+    let private getResourceLookup0 (asm: Assembly) =
+        let makeXamlString (stream: Stream) =
+            use reader = new StreamReader(stream)
+            in  reader.ReadToEnd()
+
+        let readResourceStream (stream: Stream) =
+            use reader = new System.Resources.ResourceReader(stream)
+            reader
+            |> Seq.cast :> seq<Collections.DictionaryEntry>
+            |> Seq.map (fun entry -> entry.Key :?> string, makeXamlString (entry.Value :?> Stream))
+            |> Map.ofSeq
+
+        let getWpfResourceName (asm: Assembly) = sprintf "%s.g.resources" <| asm.GetName().Name
+
+        let resourceName = getWpfResourceName asm
+        in  match asm.GetManifestResourceStream resourceName with
+            | null -> Map.empty
+            | stream -> readResourceStream stream
+
+    let private getResourceLookup = Utils.memoize getResourceLookup0
+
+    let findWpfResource name = getResourceLookup >> Map.tryFind name
+
+(******************* Timer ************************)
 module DispatcherTimer =
     open System.Windows.Threading
 
@@ -228,20 +273,17 @@ module XamlLoader =
         LoadWpfInternal xamlContent rootObject
 
     let loadFromResource(resourceUri, resourceName) rootObj =
-        let mainAssembly = System.Reflection.Assembly.GetEntryAssembly()
-        use stream = mainAssembly |> Assembly.getManifestResourceStream resourceUri 
-        if stream = null then
-            failwithf """Cannot find resource %s in %s\
-                         Available resources are:\
-                         \t%s
-                      """ resourceUri mainAssembly.FullName (String.Join("\n\t", mainAssembly.GetManifestResourceNames()))
-        let resource =
-            new System.Resources.ResourceReader(stream) :> Collections.IEnumerable
-            |> Seq.cast :> seq<Collections.DictionaryEntry>
-            |> toMap ((fun x -> x.Key :?> string), (fun x -> x.Value))
-        let xamlRaw = resource.[resourceName] :?> Stream
-        use reader = new XamlXmlReader(xamlRaw, XamlReader.GetWpfSchemaContext())
-        loadStreamInternal(reader, rootObj)
+        let asm = System.Reflection.Assembly.GetCallingAssembly()
+        match ResourceManager.findWpfResource resourceName asm with
+        | None ->
+            failwithf "Cannot find WPF resource in %s\n\
+                       Available resources are:\n\
+                       \t%s
+                      " asm.FullName (String.Join("\n\t", asm.GetManifestResourceNames()))
+        | Some xaml -> 
+            let text = new StringReader(xaml)
+            use reader = new XamlXmlReader(text, XamlReader.GetWpfSchemaContext())
+            loadStreamInternal(reader, rootObj)
 
 // ------------------------- DataContext method binder ------------------------- //
 type DCMethodExtension(methodName: string) =
