@@ -5,38 +5,47 @@ open System.Linq
 open System.ComponentModel
 open System.Windows
 open System.Windows.Controls
+open RZ.Wpf
 
 type public Inclusion() as me = 
     inherit System.Windows.Controls.Panel()
+    let designMode = DesignerProperties.GetIsInDesignMode me
+
+    let loadUIElementFromResource filename =
+        let asm = System.Reflection.Assembly.GetEntryAssembly()
+        in  XamlLoader.loadFromResource0 filename None asm
 
     let loadUiElement filename =
-        match RZ.Wpf.XamlLoader.LoadWpfFromFile filename with
-        | :? UIElement as ele -> Some ele
-        | _ -> None
+        try
+            match RZ.Wpf.XamlLoader.LoadWpfFromFile filename with
+            | :? UIElement as ele -> Some ele
+            | _ -> None
+        with
+        | :? System.IO.FileNotFoundException ->
+            Some (loadUIElementFromResource filename :?> UIElement)
+            (*
+            let error = sprintf "Cannot find %s in %s." filename (System.IO.Directory.GetCurrentDirectory())
+            Some (Label(Content = error) :> UIElement)
+            *)
 
-    let loadXamlRuntimeMode filename (this: Inclusion) =
-        this.Children.Clear()
+    let loadXamlRuntimeMode filename =
         match loadUiElement filename with
-        | None -> ()
-        | Some ui -> ignore <| this.Children.Add ui
+        | None -> []
+        | Some ui -> [ui]
                    
-    let loadXamlDesignMode filename (this: Inclusion) =
-        ignore (this.Children.Add <| Label(Content = filename))
+    let loadXamlDesignMode filename =
+        [Label(Content = filename) :> UIElement]
 
-    let loadXamlTo = if DesignerProperties.GetIsInDesignMode(me) then loadXamlDesignMode else loadXamlRuntimeMode
+    let loadXamlTo = if designMode then loadXamlDesignMode else loadXamlRuntimeMode
 
     static let OnXamlChanged (o: DependencyObject) (e: DependencyPropertyChangedEventArgs) =
         match o with
         | :? Inclusion as this -> this.Children.Clear()
                                   let value = e.NewValue :?> string
                                   if not (String.IsNullOrEmpty value) then
-                                      try
-                                          this.LoadXamlTo value this
-                                      with
-                                      | :? System.IO.FileNotFoundException ->
-                                          let error = sprintf "Cannot find %s in %s." (value) (System.IO.Directory.GetCurrentDirectory())
-                                          ignore <| this.Children.Add( System.Windows.Controls.Label(Content = error))
-        | _ -> ()
+                                      this.LoadXamlTo value
+                                      |> List.iter (fun ui -> ignore (this.Children.Add ui))
+        | _ -> failwith "Unexpected"
     
     static let xamlProperty = DependencyProperty.Register("Xaml", typeof<string>, typeof<Inclusion>,
                                     FrameworkPropertyMetadata(PropertyChangedCallback(OnXamlChanged))

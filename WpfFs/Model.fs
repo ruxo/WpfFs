@@ -18,5 +18,5 @@ type MainWindowScope(model: MainWindowModel)  =
 type RoutedEventInActionModel() =
     inherit ViewModelBase()
 
-    member val ShowPopup = RelayCommand.BindCommand(fun _ -> let win = XamlLoader.LoadWpfFromFile "RoutedEventInAction.xaml" :?> Window
-                                                             ignore <| win.ShowDialog())
+    member val ShowPopup = RelayCommand.BindCommand(fun _ -> let win = XamlLoader.loadFromResource "RoutedEventInAction.xaml" None :?> Window
+                                                             in ignore <| win.ShowDialog())

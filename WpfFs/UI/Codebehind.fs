@@ -10,7 +10,7 @@ open RZ.Wpf
 type MainWindow() as me =
     inherit System.Windows.Window()
 
-    do  RZ.Wpf.XamlLoader.loadFromResource ("WpfFs.g.resources", "mainwindow.xaml") (Some me) |> ignore
+    do  RZ.Wpf.XamlLoader.loadFromResource "mainwindow.xaml" (Some me) |> ignore
     let context = me.DataContext :?> MainWindowModel
     let scope = MainWindowScope context
     let changeView (name:string) = context.OnUIEvent("CHANGEVIEW", name :> obj)

@@ -62,19 +62,11 @@
     <Compile Include="UI\Codebehind.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
+    <Resource Include="AboutDialog.xaml" />
     <Resource Include="MainWindow.xaml" />
-    <Content Include="AboutDialog.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="GridSharedSizeGroup.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="RoutedEventInActionFront.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="RoutedEventInAction.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Resource Include="GridSharedSizeGroup.xaml" />
+    <Resource Include="RoutedEventInActionFront.xaml" />
+    <Resource Include="RoutedEventInAction.xaml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WpfFsControls\WpfFsControls.fsproj">

@@ -28,10 +28,6 @@ module Utils =
 module ResourceManager =
     open System.Reflection
 
-    [<NoComparison>]
-    type AssemblyResourceCacheEntry = { assembly: Assembly
-                                        resource: string }
-
     let private getResourceLookup0 (asm: Assembly) =
         let makeXamlString (stream: Stream) =
             use reader = new StreamReader(stream)
@@ -53,7 +49,7 @@ module ResourceManager =
 
     let private getResourceLookup = Utils.memoize getResourceLookup0
 
-    let findWpfResource name = getResourceLookup >> Map.tryFind name
+    let findWpfResource (name: string) = getResourceLookup >> Map.tryFind (name.ToLower())
 
 (******************* Timer ************************)
 module DispatcherTimer =
@@ -214,18 +210,13 @@ type IXamlConnector =
 
 [<RequireQualifiedAccess>]
 module XamlLoader =
-    let private toMap(fkey, fvalue) (me: seq<'T>) =
-        me
-        |> Seq.map (fun x -> (fkey x, fvalue x))
-        |> Map.ofSeq
-
     let locateType (typeName) =
         AppDomain.CurrentDomain.GetAssemblies().AsParallel()
         |> Seq.map (fun asm -> asm.GetType(typeName))
         |> Seq.filter (fun t -> t <> null)
         |> Seq.head
 
-    let private getRootObject (xaml) =
+    let private getRootObject<'a> (xaml) =
         let xml = XElement.Parse(xaml)
         let clsName = XName.Get("Class", "http://schemas.microsoft.com/winfx/2006/xaml")
         let attr = xml.Attribute(clsName)
@@ -234,7 +225,7 @@ module XamlLoader =
         else
             match locateType(attr.Value) with
             | null     -> failwithf "Type %s not found." attr.Value
-            | rootType -> Some <| Activator.CreateInstance(rootType)
+            | rootType -> Some (Activator.CreateInstance(rootType) :?> 'a)
 
     let private loadStreamInternal(reader: XamlXmlReader, rootObject) =
         let writerSettings = XamlObjectWriterSettings()
@@ -272,8 +263,7 @@ module XamlLoader =
 
         LoadWpfInternal xamlContent rootObject
 
-    let loadFromResource(resourceUri, resourceName) rootObj =
-        let asm = System.Reflection.Assembly.GetCallingAssembly()
+    let loadFromResource0 resourceName (rootObj: 'a option) asm =
         match ResourceManager.findWpfResource resourceName asm with
         | None ->
             failwithf "Cannot find WPF resource in %s\n\
@@ -282,8 +272,13 @@ module XamlLoader =
                       " asm.FullName (String.Join("\n\t", asm.GetManifestResourceNames()))
         | Some xaml -> 
             let text = new StringReader(xaml)
+            let finalRoot = if rootObj.IsNone then getRootObject xaml else rootObj
             use reader = new XamlXmlReader(text, XamlReader.GetWpfSchemaContext())
-            loadStreamInternal(reader, rootObj)
+            loadStreamInternal(reader, finalRoot)
+        
+    let loadFromResource resourceName (rootObj: 'a option) =
+        let asm = System.Reflection.Assembly.GetCallingAssembly()
+        in  loadFromResource0 resourceName rootObj asm
 
 // ------------------------- DataContext method binder ------------------------- //
 type DCMethodExtension(methodName: string) =
