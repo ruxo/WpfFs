@@ -23,12 +23,20 @@ module DispatcherTimer =
         { new IDisposable with member me.Dispose() = r.Dispose(); t.Stop() }
 
 // ------------------------- View Model ------------------------- //
+type UIEvent = string * obj
+
 type ViewModelBase() =
     let propertyChangedEvent = new DelegateEvent<ComponentModel.PropertyChangedEventHandler>()
+    let runEvent = Event<UIEvent>()
+
     interface ComponentModel.INotifyPropertyChanged with
         [<CLIEvent>]
         member x.PropertyChanged = propertyChangedEvent.Publish
 
+    [<CLIEvent>]
+    member x.UIEvent = runEvent.Publish
+
+    member x.OnUIEvent data = runEvent.Trigger data
     member x.OnPropertyChanged propertyName = 
         propertyChangedEvent.Trigger([| x; new ComponentModel.PropertyChangedEventArgs(propertyName) |])
         
@@ -37,6 +45,7 @@ type ViewModelBase() =
             else field <- value
                  Array.iter self.OnPropertyChanged fieldNames
 
+    member x.SubscribeUIEvent(evt, f) = x.UIEvent |> Observable.filter (fun (n, _) -> n = evt) |> Observable.subscribe (fun (_, data) -> f data) |> ignore
 
 // ------------- WPF Observable Collection -------------------- //
 type IObservableTracker<'Args> =
@@ -262,3 +271,7 @@ type DCMethodExtension(methodName: string) =
                         | handler -> event.AddEventHandler(fe, handler))
         
         !lastAssignment :> obj
+
+// -------------- Utilities -----------------
+module RZWpf =
+    let DesignerMode = System.ComponentModel.DesignerProperties.GetIsInDesignMode

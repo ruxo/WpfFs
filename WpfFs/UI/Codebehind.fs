@@ -4,11 +4,16 @@ open System.Windows
 open System.Windows.Controls
 open System.Windows.Media
 open System.Windows.Input
+open WpfFs.Models
+open RZ.Wpf
 
 type MainWindow() as me =
     inherit System.Windows.Window()
 
-    do RZ.Wpf.XamlLoader.loadFromResource ("WpfFs.g.resources", "mainwindow.xaml") (Some me) |> ignore
+    do  RZ.Wpf.XamlLoader.loadFromResource ("WpfFs.g.resources", "mainwindow.xaml") (Some me) |> ignore
+    let context = me.DataContext :?> MainWindowModel
+    let scope = MainWindowScope context
+    let changeView (name:string) = context.OnUIEvent("CHANGEVIEW", name :> obj)
 
     member this.HelpCanExecute(sender:obj, e:CanExecuteRoutedEventArgs) = e.CanExecute <- true
 
@@ -31,3 +36,8 @@ type MainWindow() as me =
             source.BorderBrush <- Brushes.Black
         else
             source.BorderThickness <- Thickness(0.0)
+
+    member private me.RunAbout (s:obj, e:RoutedEventArgs) = changeView "AboutDialog.xaml"
+    member private me.RunRoutedEventInAction (s:obj, e:RoutedEventArgs) = changeView "RoutedEventInActionFront.xaml"
+    member private me.RunDataBinding (s:obj, e:RoutedEventArgs) = changeView "DataBinding.xaml"
+    member private me.RunGridSharedSizeGroup (s:obj, e:RoutedEventArgs) = changeView "GridSharedSizeGroup.xaml"

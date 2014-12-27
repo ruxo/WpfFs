@@ -1,19 +1,19 @@
-﻿namespace TestFs.Models
+﻿namespace WpfFs.Models
 
 open System.Windows
 open RZ.Wpf
 open RZ.Wpf.Commands
 
-type MainWindowModel() as this =
+type MainWindowModel() =
     inherit ViewModelBase()
 
     let mutable xamlFileName = ""
 
     member this.XamlViewFilename with get() = xamlFileName and set (value) = this.setValue(&xamlFileName, value, "XamlViewFilename")
 
-    member val RunAbout = RelayCommand.BindCommand(fun _ -> this.XamlViewFilename <- "AboutDialog.xaml")
-    member val RunGridSharedSizeGroup = RelayCommand.BindCommand(fun _ -> this.XamlViewFilename <- "GridSharedSizeGroup.xaml")
-    member val RunRoutedEventInAction = RelayCommand.BindCommand(fun _ -> this.XamlViewFilename <- "RoutedEventInActionFront.xaml")
+type MainWindowScope(model: MainWindowModel)  =
+    let changeView view = model.XamlViewFilename <- view
+    do  model.SubscribeUIEvent ("CHANGEVIEW", fun viewname -> changeView (viewname :?> string))
 
 type RoutedEventInActionModel() =
     inherit ViewModelBase()

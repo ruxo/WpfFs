@@ -4,8 +4,9 @@ open System.Windows
 
 type Evt() =
     static let setEvent (el: DependencyObject) (event: string) (property: string) =
+        let fe = el :?> FrameworkElement
         let trigger = Interactivity.EventTrigger(EventName=event)
-        match (el :?> FrameworkElement).DataContext with
+        match fe.DataContext with
         | null    -> () // failwith "DataContext must have been set"
         | context -> let ct = context.GetType()
                      let propGet = ct.GetProperty(property).GetGetMethod()

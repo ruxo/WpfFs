@@ -1,7 +1,7 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:rzwpf="clr-namespace:RZ.Wpf.Controls;assembly=WpfFsControls"
-    xmlns:model="clr-namespace:TestFs.Models;assembly=WpfFs"
+    xmlns:model="clr-namespace:WpfFs.Models;assembly=WpfFs"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=WpfFsControls"
     Width="12in" Height="8in"
@@ -15,18 +15,20 @@
   </Window.CommandBindings>
   <DockPanel >
     <TreeView DockPanel.Dock="Left" MinWidth="2in" HorizontalAlignment="Left">
-      <TreeViewItem Header="About sample" d:Evt.ToCommand="Selected -> RunAbout">
-      </TreeViewItem>
+      <TreeViewItem Header="About sample" Selected="RunAbout" />
+
       <TreeViewItem Header="Layouts">
         <TreeViewItem Header="Grid">
-          <TreeViewItem Header="Shared Size Group" d:Evt.ToCommand="Selected -> RunGridSharedSizeGroup">
-          </TreeViewItem>
+          <TreeViewItem Header="Shared Size Group" Selected="RunGridSharedSizeGroup" />
         </TreeViewItem>
       </TreeViewItem>
       <TreeViewItem Header="Input Events">
         <TreeViewItem Header="Routed Events">
-          <TreeViewItem Header="Bubble" d:Evt.ToCommand="Selected -> RunRoutedEventInAction" />
+          <TreeViewItem Header="Bubble" Selected="RunRoutedEventInAction" />
         </TreeViewItem>
+      </TreeViewItem>
+      <TreeViewItem Header="Data Binding">
+        <TreeViewItem Header="Collection Binding" Selected="RunDataBinding" />
       </TreeViewItem>
     </TreeView>
     <rzwpf:Inclusion Xaml="{Binding Path=XamlViewFilename}" />

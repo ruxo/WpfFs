@@ -29,7 +29,7 @@ type public Inclusion() as me =
         match o with
         | :? Inclusion as this -> this.Children.Clear()
                                   let value = e.NewValue :?> string
-                                  if value <> null then
+                                  if not (String.IsNullOrEmpty value) then
                                       try
                                           this.LoadXamlTo value this
                                       with
