@@ -1,0 +1,31 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
+             xmlns:model="clr-namespace:WpfFs.Models;assembly=WpfFs"
+             >
+  <UserControl.DataContext>
+    <model:DatabindingSampleModel>
+      <model:DatabindingSampleModel.Data>
+        <model:PersonCollection>
+          <model:Person Id="0" Name="Test Data" />
+          <model:Person Id="1" Name="Test Data #1" />
+        </model:PersonCollection>
+      </model:DatabindingSampleModel.Data>
+    </model:DatabindingSampleModel>
+  </UserControl.DataContext>
+  <StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <RadioButton>Main Thread</RadioButton>
+      <RadioButton>Multi-Thread</RadioButton>
+      <Button>Add 10 items</Button>
+      <Button>Remove 5 items</Button>
+      <Button>Clear</Button>
+    </StackPanel>
+  <ListView ItemsSource="{Binding Data}">
+    <ListView.View>
+      <GridView>
+        <GridViewColumn Header="No" DisplayMemberBinding="{Binding Id}" />
+        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+      </GridView>
+    </ListView.View>
+  </ListView>
+  </StackPanel>
+</UserControl>

@@ -39,5 +39,5 @@ type MainWindow() as me =
 
     member private me.RunAbout (s:obj, e:RoutedEventArgs) = changeView "AboutDialog.xaml"
     member private me.RunRoutedEventInAction (s:obj, e:RoutedEventArgs) = changeView "RoutedEventInActionFront.xaml"
-    member private me.RunDataBinding (s:obj, e:RoutedEventArgs) = changeView "DataBinding.xaml"
+    member private me.RunDataBinding (s:obj, e:RoutedEventArgs) = changeView "DataBindingSample.xaml"
     member private me.RunGridSharedSizeGroup (s:obj, e:RoutedEventArgs) = changeView "GridSharedSizeGroup.xaml"

@@ -67,6 +67,7 @@
     <Resource Include="GridSharedSizeGroup.xaml" />
     <Resource Include="RoutedEventInActionFront.xaml" />
     <Resource Include="RoutedEventInAction.xaml" />
+    <Resource Include="DataBindingSample.xaml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WpfFsControls\WpfFsControls.fsproj">
