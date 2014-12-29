@@ -1,8 +1,9 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
              xmlns:model="clr-namespace:WpfFs.Models;assembly=WpfFs"
+             xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=WpfFsControls"
              >
   <UserControl.DataContext>
-    <model:DatabindingSampleModel>
+    <model:DatabindingSampleModel DataBindingMode="SingleThread">
       <model:DatabindingSampleModel.Data>
         <model:PersonCollection>
           <model:Person Id="0" Name="Test Data" />
@@ -13,8 +14,9 @@
   </UserControl.DataContext>
   <StackPanel>
     <StackPanel Orientation="Horizontal">
-      <RadioButton>Main Thread</RadioButton>
-      <RadioButton>Multi-Thread</RadioButton>
+      <RadioButton d:Model.Bind="DataBindingMode" d:Model.Value="SingleThread">Main Thread</RadioButton>
+      <RadioButton d:Model.Bind="DataBindingMode" d:Model.Value="MultiThread">Multi-Thread</RadioButton>
+      <Label Content="{Binding DataBindingMode}" />
       <Button>Add 10 items</Button>
       <Button>Remove 5 items</Button>
       <Button>Clear</Button>
