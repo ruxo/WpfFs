@@ -16,6 +16,10 @@
   </UserControl.DataContext>
   <StackPanel>
     <StackPanel Orientation="Horizontal">
+      <Label Margin="10,0">Collection Type:</Label>
+      <ComboBox ItemsSource="{Binding CollectionMode}" SelectedIndex="0" />
+    </StackPanel>
+    <StackPanel Orientation="Horizontal">
       <RadioButton d:Model.Bind="DataBindingMode" d:Model.Value="SingleThread">Main Thread</RadioButton>
       <RadioButton d:Model.Bind="DataBindingMode" d:Model.Value="MultiThread">Multi-Thread</RadioButton>
       <Button Click="Add10Items">Add 10 items</Button>

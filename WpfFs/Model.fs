@@ -29,6 +29,7 @@ type Person() =
 type PersonCollection() = inherit ObservableCollection<Person>()
 
 type DataBindingMode = SingleThread = 0 | MultiThread = 1
+type DataBindingCollectionMode = ObserverableCollection = 0 | WpfObservableCollection = 1
 
 type DatabindingSampleModel() =
     inherit ViewModelBase()
@@ -38,3 +39,4 @@ type DatabindingSampleModel() =
 
     member x.Data with get() = data and set(v) = x.setValue(&data, v, "Data")
     member x.DataBindingMode with get() = bindingMode and set v = x.setValue(&bindingMode, v, "DataBindingMode")
+    member val CollectionMode = [DataBindingCollectionMode.ObserverableCollection; DataBindingCollectionMode.WpfObservableCollection] with get
