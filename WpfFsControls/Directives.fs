@@ -36,8 +36,9 @@ type ModelBinderInfo() =
                  in  fe.SetBinding(RadioButton.IsCheckedProperty, binding) |> ignore
 
     member x.Rebound (fe: FrameworkElement) =
-        let expr = fe.GetBindingExpression RadioButton.IsCheckedProperty
-        in  expr.UpdateTarget()
+        match fe.GetBindingExpression RadioButton.IsCheckedProperty with
+        | null -> ()
+        | expr -> expr.UpdateTarget()
 
     interface IValueConverter with
         member x.Convert(value, targetType, parameter, culture) =

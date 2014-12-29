@@ -16,7 +16,6 @@
     <StackPanel Orientation="Horizontal">
       <RadioButton d:Model.Bind="DataBindingMode" d:Model.Value="SingleThread">Main Thread</RadioButton>
       <RadioButton d:Model.Bind="DataBindingMode" d:Model.Value="MultiThread">Multi-Thread</RadioButton>
-      <Label Content="{Binding DataBindingMode}" />
       <Button>Add 10 items</Button>
       <Button>Remove 5 items</Button>
       <Button>Clear</Button>
