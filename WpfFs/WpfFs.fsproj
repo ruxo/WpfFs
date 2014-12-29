@@ -60,6 +60,7 @@
     <Compile Include="Model.fs" />
     <Compile Include="Directives.fs" />
     <Compile Include="UI\Codebehind.fs" />
+    <Compile Include="UI\DataBindingSampleView.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <Resource Include="AboutDialog.xaml" />
