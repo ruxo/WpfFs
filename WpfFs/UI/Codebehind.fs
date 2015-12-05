@@ -1,23 +1,26 @@
 ﻿namespace WpfFs.UI
 
-open System.Windows
-open System.Windows.Controls
-open System.Windows.Media
 open System.Windows.Input
-open WpfFs.Models
-open RZ.Wpf
 
-type MainWindow() as me =
+type MainWindow = FsXaml.XAML<"MainWindow.xaml", true>
+
+type MainWindowController() =
+  inherit FsXaml.WindowViewController<MainWindow>()
+
+  let startGoogle() = System.Diagnostics.Process.Start "http://google.com" |> ignore
+
+  override __.OnInitialized window =
+    window.Root.CommandBindings.Add
+      <| CommandBinding(ApplicationCommands.Help, fun _ _ -> startGoogle())
+    |> ignore
+
+  (*
+type OldMainWindow() as me =
     inherit System.Windows.Window()
 
     do  RZ.Wpf.XamlLoader.loadFromResource "mainwindow.xaml" (Some me) |> ignore
     let context = me.DataContext :?> MainWindowModel
-    let scope = MainWindowScope context
     let changeView (name:string) = context.OnUIEvent("CHANGEVIEW", name :> obj)
-
-    member this.HelpCanExecute(sender:obj, e:CanExecuteRoutedEventArgs) = e.CanExecute <- true
-
-    member this.HelpExecuted(sender:obj, e:ExecutedRoutedEventArgs) = ignore <| System.Diagnostics.Process.Start "http://google.com"
 
     member this.ListBox_SelectionChanged(sender:obj, e:SelectionChangedEventArgs) =
         if e.AddedItems.Count > 0 then
@@ -42,3 +45,4 @@ type MainWindow() as me =
     member private me.RunDataBinding (s:obj, e:RoutedEventArgs) = changeView "DataBindingSample.xaml"
     member private me.RunGridSharedSizeGroup (s:obj, e:RoutedEventArgs) = changeView "GridSharedSizeGroup.xaml"
     member private me.ShowFlowDocument (s:obj, e:RoutedEventArgs) = changeView "FlowDocumentSample.xaml"
+    *)

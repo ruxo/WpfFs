@@ -1,27 +1,38 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:fsx="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
     xmlns:rzwpf="clr-namespace:RZ.Wpf.Controls;assembly=WpfFsControls"
     xmlns:model="clr-namespace:WpfFs.Models;assembly=WpfFs"
+    xmlns:local="clr-namespace:WpfFs.UI;assembly=WpfFs"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=WpfFsControls"
+    fsx:ViewController.Custom="{x:Type local:MainWindowController}"
     Width="12in" Height="8in"
     Title="About WPF 4 Unleashed"
     >
   <Window.DataContext>
     <model:MainWindowModel XamlViewFilename="AboutDialog.xaml" />
   </Window.DataContext>
-  <Window.CommandBindings>
-    <CommandBinding Command="Help" CanExecute="HelpCanExecute" Executed="HelpExecuted" />
-  </Window.CommandBindings>
+  <Window.Resources>
+    <model:SelectConverter x:Key="selectConverter" />
+  </Window.Resources>
   <DockPanel >
     <TreeView DockPanel.Dock="Left" MinWidth="2in" HorizontalAlignment="Left">
-      <TreeViewItem Header="About sample" Selected="RunAbout" />
-
+      <i:Interaction.Triggers>
+        <i:EventTrigger EventName="SelectedEvent">
+          <fsx:EventToCommand Command="{Binding EventCommand}" EventArgsConverter="{StaticResource selectConverter}" />
+        </i:EventTrigger>
+      </i:Interaction.Triggers>
+      
+      <TreeViewItem Header="About sample" Tag="AboutDialog.xaml">
+      </TreeViewItem>
       <TreeViewItem Header="Layouts">
         <TreeViewItem Header="Grid">
-          <TreeViewItem Header="Shared Size Group" Selected="RunGridSharedSizeGroup" />
+          <TreeViewItem Header="Shared Size Group" Tag="GridSharedSizeGroup.xaml" />
         </TreeViewItem>
       </TreeViewItem>
+
+      <!--
       <TreeViewItem Header="Input Events">
         <TreeViewItem Header="Routed Events">
           <TreeViewItem Header="Bubble" Selected="RunRoutedEventInAction" />
@@ -35,6 +46,8 @@
         <TreeViewItem Header="Fixed Documents (XPS)" />
         <TreeViewItem Header="Custom Documents" />
       </TreeViewItem>
+
+      -->
     </TreeView>
     <rzwpf:Inclusion Xaml="{Binding Path=XamlViewFilename}" />
   </DockPanel>
