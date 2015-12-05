@@ -1,8 +1,5 @@
 ﻿open System
-open System.Threading
-open System.Threading.Tasks
 open System.Windows
-open System.Windows.Threading
 
 open WpfFs.UI
 
