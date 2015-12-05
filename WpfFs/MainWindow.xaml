@@ -30,6 +30,11 @@
       <TreeViewItem Header="Data Binding">
         <TreeViewItem Header="Collection Binding" Selected="RunDataBinding" />
       </TreeViewItem>
+      <TreeViewItem Header="Documents">
+        <TreeViewItem Header="Flow Documents" Selected="ShowFlowDocument" />
+        <TreeViewItem Header="Fixed Documents (XPS)" />
+        <TreeViewItem Header="Custom Documents" />
+      </TreeViewItem>
     </TreeView>
     <rzwpf:Inclusion Xaml="{Binding Path=XamlViewFilename}" />
   </DockPanel>

@@ -41,3 +41,4 @@ type MainWindow() as me =
     member private me.RunRoutedEventInAction (s:obj, e:RoutedEventArgs) = changeView "RoutedEventInActionFront.xaml"
     member private me.RunDataBinding (s:obj, e:RoutedEventArgs) = changeView "DataBindingSample.xaml"
     member private me.RunGridSharedSizeGroup (s:obj, e:RoutedEventArgs) = changeView "GridSharedSizeGroup.xaml"
+    member private me.ShowFlowDocument (s:obj, e:RoutedEventArgs) = changeView "FlowDocumentSample.xaml"

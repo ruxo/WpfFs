@@ -1,0 +1,48 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid>
+    <FlowDocumentReader>
+      <FlowDocument ColumnWidth="300">
+        <Paragraph FontSize="22" FontWeight="Bold">Chapter 1</Paragraph>
+        <Paragraph FontSize="35" FontWeight="Bold">Why WPF?</Paragraph>
+        <Paragraph>
+          Unlike the dynamic-layout documents described in this section, XPS documents have a fixed
+layout and always look the same, whether on screen or on paper. The .NET Framework
+includes APIs for creating and viewing XPS documents (in the System.Windows.Xps and
+System.Windows.Documents namespaces), or you can use tools such as Microsoft Word to
+create and view them. In WPF applications, XPS documents are typically represented as
+instances of FixedDocument and viewed in a DocumentViewer control.
+You can think of XPS documents much like Adobe PDF documents; they both have standalone
+viewers (available on multiple platforms) and can be viewed in a web browser (with the
+right plug-in installed). One area where XPS is unique is that it’s also a native Windows spool
+file format (starting with Windows Vista). This ensures that XPS documents can be printed
+without loss of quality or fidelity and without any extra work done by the application initiating
+the printing.
+The specifications for XPS and the Open Packaging Conventions used by XPS (whose APIs
+are in the System.IO.Packaging namespace) can be found at http://microsoft.com/xps.
+        </Paragraph>
+        <Paragraph FontSize="16" FontWeight="Bold">Block</Paragraph>
+        <Paragraph>
+          WPF has five different types of Blocks:
+        </Paragraph>
+        <List MarkerStyle="Box" >
+          <ListItem>
+            <Paragraph>
+              <Bold>Paragraph</Bold> —Has a collection of Inlines, which typically contain the “meat” of the
+document. In XAML, you often see Paragraph’s content set to simple text, but internally
+an Inline called Run is created with that content and added to the Paragraph’s
+Inlines collection, just like with TextBlock.
+            </Paragraph>
+          </ListItem>
+          <ListItem>
+            <Paragraph>
+              <Bold>Section</Bold> —Groups one or more Blocks together without imposing any additional
+structure. This is handy if you want to set the same property values for multiple
+Blocks, such as a Background and Foreground.
+            </Paragraph>
+          </ListItem>
+        </List>
+      </FlowDocument>
+    </FlowDocumentReader>
+  </Grid>
+</UserControl>
