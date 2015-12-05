@@ -2,5 +2,11 @@ Debug/
 Release/
 obj/
 bin/
+packages/
+.fake/
+.vscode/
 *.swp
 *.suo
+paket.exe
+paket.targets
+paket.lock

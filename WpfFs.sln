@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WpfFs", "WpfFs\WpfFs.fsproj", "{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WpfFsControls", "WpfFsControls\WpfFsControls.fsproj", "{662B6576-95B3-4B79-BB5B-4A9324D4334B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{18CAED78-48DF-453C-AB27-AB91BA0A11AE}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		paket.dependencies = paket.dependencies
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
