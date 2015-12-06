@@ -4,3 +4,5 @@ source https://nuget.org/api/v2
 nuget FAKE
 nuget FSharp.ViewModule.Core
 nuget RZ.F4.FsXaml.Wpf
+
+gist ruxo/a9244a6dfe5e73337261 common.fs

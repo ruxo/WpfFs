@@ -6,6 +6,7 @@ build/
 packages/
 .fake/
 .vscode/
+paket-files/
 *.swp
 *.suo
 paket.exe

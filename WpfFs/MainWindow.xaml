@@ -18,17 +18,15 @@
   </Window.Resources>
   <DockPanel >
     <TreeView DockPanel.Dock="Left" MinWidth="2in" HorizontalAlignment="Left">
-      <i:Interaction.Triggers>
-        <i:EventTrigger EventName="SelectedEvent">
-          <fsx:EventToCommand Command="{Binding EventCommand}" EventArgsConverter="{StaticResource selectConverter}" />
-        </i:EventTrigger>
-      </i:Interaction.Triggers>
       
       <TreeViewItem Header="About sample" Tag="AboutDialog.xaml">
+        <i:Interaction.Triggers><i:EventTrigger EventName="Selected"><fsx:EventToCommand Command="{Binding EventCommand}" EventArgsConverter="{StaticResource selectConverter}" /> </i:EventTrigger> </i:Interaction.Triggers>
       </TreeViewItem>
       <TreeViewItem Header="Layouts">
         <TreeViewItem Header="Grid">
-          <TreeViewItem Header="Shared Size Group" Tag="GridSharedSizeGroup.xaml" />
+          <TreeViewItem Header="Shared Size Group" Tag="GridSharedSizeGroup.xaml">
+            <i:Interaction.Triggers><i:EventTrigger EventName="Selected"><fsx:EventToCommand Command="{Binding EventCommand}" EventArgsConverter="{StaticResource selectConverter}" /> </i:EventTrigger> </i:Interaction.Triggers>
+          </TreeViewItem>
         </TreeViewItem>
       </TreeViewItem>
 
