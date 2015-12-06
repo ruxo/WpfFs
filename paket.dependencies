@@ -2,6 +2,7 @@ source http://ruxoz.net/nuhost/nuget
 source https://nuget.org/api/v2
 
 nuget FAKE
+nuget FSharp.Core.Fluent-4.0
 nuget FSharp.ViewModule.Core
 nuget RZ.F4.FsXaml.Wpf
 
