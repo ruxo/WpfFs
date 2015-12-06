@@ -40,49 +40,6 @@
     <DocumentationFile>..\bin\testfs.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="..\paket-files\ruxo\a9244a6dfe5e73337261\common.fs">
-      <Paket>True</Paket>
-      <Link>paket-files/common.fs</Link>
-    </Compile>
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="UIAutomationTypes" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Model.fs" />
-    <Compile Include="OldModel.fs" />
-    <Compile Include="Directives.fs" />
-    <Compile Include="UI\Codebehind.fs" />
-    <Compile Include="UI\DataBindingSampleView.fs" />
-    <Compile Include="Program.fs" />
-    <None Include="App.config" />
-    <Resource Include="AboutDialog.xaml" />
-    <Resource Include="MainWindow.xaml" />
-    <Resource Include="GridSharedSizeGroup.xaml" />
-    <Resource Include="RoutedEventInActionFront.xaml" />
-    <Resource Include="RoutedEventInAction.xaml" />
-    <Resource Include="DataBindingSample.xaml" />
-    <Resource Include="FlowDocumentSample.xaml" />
-    <None Include="paket.references" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WpfFsControls\WpfFsControls.fsproj">
-      <Name>WpfFsControls</Name>
-      <Project>{662b6576-95b3-4b79-bb5b-4a9324d4334b}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>
@@ -169,4 +126,46 @@
       </ItemGroup>
     </When>
   </Choose>
+  <ItemGroup>
+    <Compile Include="Model.fs" />
+    <Compile Include="OldModel.fs" />
+    <Compile Include="Directives.fs" />
+    <Compile Include="UI\Codebehind.fs" />
+    <Compile Include="UI\DataBindingSampleView.fs" />
+    <Compile Include="Program.fs" />
+    <None Include="App.config" />
+    <Resource Include="AboutDialog.xaml" />
+    <Resource Include="MainWindow.xaml" />
+    <Resource Include="GridSharedSizeGroup.xaml" />
+    <Resource Include="RoutedEventInActionFront.xaml" />
+    <Resource Include="RoutedEventInAction.xaml" />
+    <Resource Include="DataBindingSample.xaml" />
+    <Resource Include="FlowDocumentSample.xaml" />
+    <None Include="paket.references" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WpfFs.Common\WpfFs.Common.fsproj">
+      <Name>WpfFs.Common</Name>
+      <Project>{39e97f56-cea0-4e55-889e-41a26dd619f4}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+    <ProjectReference Include="..\WpfFsControls\WpfFsControls.fsproj">
+      <Name>WpfFsControls</Name>
+      <Project>{662b6576-95b3-4b79-bb5b-4a9324d4334b}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

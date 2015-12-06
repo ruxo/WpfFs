@@ -1,5 +1,5 @@
 ﻿namespace RZ.Wpf
-// v20140921
+// v20151206
 
 open System
 open System.Collections.Specialized
@@ -9,7 +9,7 @@ open System.Xaml
 open System.Windows
 open System.Windows.Markup
 open System.Linq
-open RZ.NetWrapper
+open RZ.Foundation
 
 module Utils = 
     let memoize (f: 'a -> 'b) =
@@ -256,25 +256,34 @@ module XamlLoader =
         loadStreamInternal(reader, rootObject)
 
     let loadWpfFromString xamlBody = LoadWpfInternal xamlBody (getRootObject(xamlBody))
-    let LoadWpfFromFile xamlFilename = loadWpfFromString <| File.ReadAllText(xamlFilename)
+
+    let private readTextFile f =
+      if File.Exists f then
+        try
+          Some (File.ReadAllText f)
+        with
+        | _ -> None
+      else
+        None
+
+    let LoadWpfFromFile xamlFilename = readTextFile xamlFilename |> Option.map loadWpfFromString
 
     let LoadWpf xamlFilename rootObject = 
         let xamlContent = File.ReadAllText(xamlFilename)
 
         LoadWpfInternal xamlContent rootObject
 
+    let private showAllResources (asm: Reflection.Assembly) = String.Join("\n\t", asm.GetManifestResourceNames())
+
+    let loadXmlFromString (rootObj: 'a option) xaml =
+      let text = new StringReader(xaml)
+      let finalRoot = rootObj |> Option.orTry (fun() -> getRootObject xaml)
+      use reader = new XamlXmlReader(text, XamlReader.GetWpfSchemaContext())
+      loadStreamInternal(reader, finalRoot)
+
     let loadFromResource0 resourceName (rootObj: 'a option) asm =
-        match ResourceManager.findWpfResource resourceName asm with
-        | None ->
-            failwithf "Cannot find WPF resource in %s\n\
-                       Available resources are:\n\
-                       \t%s
-                      " asm.FullName (String.Join("\n\t", asm.GetManifestResourceNames()))
-        | Some xaml -> 
-            let text = new StringReader(xaml)
-            let finalRoot = if rootObj.IsNone then getRootObject xaml else rootObj
-            use reader = new XamlXmlReader(text, XamlReader.GetWpfSchemaContext())
-            loadStreamInternal(reader, finalRoot)
+        ResourceManager.findWpfResource resourceName asm
+          |> Option.map (loadXmlFromString rootObj)
         
     let loadFromResource resourceName (rootObj: 'a option) =
         let asm = System.Reflection.Assembly.GetCallingAssembly()

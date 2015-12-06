@@ -1,6 +1,7 @@
 ﻿namespace WpfFs.Models
 
 open System.Collections.ObjectModel
+open RZ.Foundation
 open RZ.Wpf
 open RZ.Wpf.Commands
 open System.Windows
@@ -8,8 +9,12 @@ open System.Windows
 type RoutedEventInActionModel() =
     inherit ViewModelBase()
 
-    member val ShowPopup = RelayCommand.BindCommand(fun _ -> let win = XamlLoader.loadFromResource "RoutedEventInAction.xaml" None :?> Window
-                                                             in ignore <| win.ShowDialog())
+    member val ShowPopup = RelayCommand.BindCommand(fun _ ->
+      (XamlLoader.loadFromResource "RoutedEventInAction.xaml" None)
+        .get()
+        .cast<Window>()
+        .ShowDialog()
+      |> ignore)
 
 type Person() =
     member val Id = 0 with get, set

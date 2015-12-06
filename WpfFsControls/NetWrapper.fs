@@ -14,12 +14,6 @@ module Assembly =
 module DirInfo =
     let getFiles pattern dir = (dir:DirectoryInfo).GetFiles pattern
 
-module Option =
-    let extract f x = match x with
-                      | Some x -> Some <| f x
-                      | None -> None
-    let tryWith f x = match x with | Some x -> f x | None -> ()
-
 module Random =
     let next rand = (rand:Random).Next
 
@@ -41,7 +35,7 @@ module Xml =
     // extended util functions
     let isAttrName = (=) >> (>>) attrLocalName
     let attr name = (isAttrName >> Seq.pickSome >> (>>) attrs) name
-    let attrValueFromName name = (attr >> (<<) (Option.extract attrValue)) name
+    let attrValueFromName name = (attr >> (<<) (Option.map attrValue >> Option.get)) name
 
     let filterElementByName name = Seq.where (elementLocalName >> (=) name)
     let descendant name =  getDescendants >> filterElementByName name

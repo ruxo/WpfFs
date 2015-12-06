@@ -17,7 +17,7 @@ type SelectConverter() =
     routeArgs.Source
              .tryCast<FrameworkElement>()
              .map(fun fe -> SelectShow (fe.Tag.cast<string>()))
-             |> Option.get
+             |> Option.getOrElse (constant Invalid)
 
 type MainWindowModel() as me =
     inherit EventViewModelBase<MainWindowEvents>()
@@ -27,9 +27,13 @@ type MainWindowModel() as me =
 
     let helpCommand = me.Factory.CommandSync(fun _ -> System.Diagnostics.Process.Start "http://google.com" |> ignore)
 
+    let handleEvents = function
+      | Invalid -> System.Diagnostics.Debug.Print "WARN: Invalid message detected!!"
+      | SelectShow show -> me.XamlViewFilename <- show
+
     do
       me.EventStream
-      |> Observable.subscribe (kprintf System.Diagnostics.Debug.Print "%A")
+      |> Observable.subscribe handleEvents
       |> ignore
 
     member x.XamlViewFilename with get() = xamlFileName.Value and set v = xamlFileName.Value <- v

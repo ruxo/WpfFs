@@ -5,6 +5,7 @@ open System.Linq
 open System.ComponentModel
 open System.Windows
 open System.Windows.Controls
+open RZ.Foundation
 open RZ.Wpf
 
 type public Inclusion() as me = 
@@ -12,21 +13,12 @@ type public Inclusion() as me =
     let designMode = DesignerProperties.GetIsInDesignMode me
 
     let loadUIElementFromResource filename =
-        let asm = System.Reflection.Assembly.GetEntryAssembly()
-        in  XamlLoader.loadFromResource0 filename None asm
+        System.Reflection.Assembly.GetEntryAssembly() |> XamlLoader.loadFromResource0 filename None
 
     let loadUiElement filename =
-        try
-            match RZ.Wpf.XamlLoader.LoadWpfFromFile filename with
-            | :? UIElement as ele -> Some ele
-            | _ -> None
-        with
-        | :? System.IO.FileNotFoundException ->
-            Some (loadUIElementFromResource filename :?> UIElement)
-            (*
-            let error = sprintf "Cannot find %s in %s." filename (System.IO.Directory.GetCurrentDirectory())
-            Some (Label(Content = error) :> UIElement)
-            *)
+        RZ.Wpf.XamlLoader.LoadWpfFromFile filename
+          |> Option.orTry (fun _ -> loadUIElementFromResource filename)
+          |> Option.bind tryCast<UIElement>
 
     let loadXamlRuntimeMode filename =
         match loadUiElement filename with
