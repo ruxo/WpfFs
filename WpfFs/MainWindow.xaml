@@ -16,8 +16,31 @@
   </Window.DataContext>
   <Window.Resources>
     <model:SelectConverter x:Key="selectConverter" />
+    <Style x:Key="btn" TargetType="Button">
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <TextBlock><ContentPresenter /></TextBlock>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+
+      <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="true">
+          <Setter Property="Foreground" Value="Blue" />
+        </Trigger>
+      </Style.Triggers>
+    </Style>
   </Window.Resources>
   <DockPanel >
+    <ListBox DockPanel.Dock="Left" MinWidth="{mk:EmFontSize 10}" Width="2in">
+      <Button Style="{StaticResource btn}" Command="{Binding NavCommand}" CommandParameter="hello guys!">About sample</Button>
+      <Expander Header="Layouts">
+        <ListBox>
+          <Button Style="{StaticResource btn}" Command="{Binding NavCommand}">Grid: share side group</Button>
+        </ListBox>
+      </Expander>
+    </ListBox>
     <TreeView DockPanel.Dock="Left" MinWidth="{mk:EmFontSize 10}" Width="2in"  HorizontalAlignment="Left">
       
       <TreeViewItem Header="About sample" Tag="AboutDialog.xaml">

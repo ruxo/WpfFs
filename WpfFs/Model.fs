@@ -24,6 +24,7 @@ type MainWindowModel() as me =
 
     let eventCommand = me.Factory.EventValueCommand()
     let xamlFileName = me.Factory.Backing(<@ me.XamlViewFilename @>, System.String.Empty)
+    let navCommand = me.Factory.EventValueCommand(fun x -> System.Diagnostics.Debug.Print (x.ToString()); Invalid)
 
     let helpCommand = me.Factory.CommandSync(fun _ -> System.Diagnostics.Process.Start "http://google.com" |> ignore)
 
@@ -41,4 +42,5 @@ type MainWindowModel() as me =
     member x.Help: INotifyCommand = helpCommand
 
     member x.EventCommand = eventCommand
+    member x.NavCommand = navCommand
     
