@@ -6,9 +6,10 @@
     xmlns:local="clr-namespace:WpfFs.UI;assembly=WpfFs"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=WpfFsControls"
+    xmlns:mk="clr-namespace:RZ.Wpf.Markups;assembly=WpfFsControls"
     fsx:ViewController.Custom="{x:Type local:MainWindowController}"
     Width="12in" Height="8in"
-    Title="About WPF 4 Unleashed"
+    Title="WPF Show Case"
     >
   <Window.DataContext>
     <model:MainWindowModel XamlViewFilename="AboutDialog.xaml" />
@@ -17,7 +18,7 @@
     <model:SelectConverter x:Key="selectConverter" />
   </Window.Resources>
   <DockPanel >
-    <TreeView DockPanel.Dock="Left" MinWidth="2in" HorizontalAlignment="Left">
+    <TreeView DockPanel.Dock="Left" MinWidth="{mk:EmFontSize 10}" Width="2in"  HorizontalAlignment="Left">
       
       <TreeViewItem Header="About sample" Tag="AboutDialog.xaml">
         <i:Interaction.Triggers><i:EventTrigger EventName="Selected"><fsx:EventToCommand Command="{Binding EventCommand}" EventArgsConverter="{StaticResource selectConverter}" /> </i:EventTrigger> </i:Interaction.Triggers>

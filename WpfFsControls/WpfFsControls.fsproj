@@ -57,6 +57,7 @@
     <Compile Include="Commands.fs" />
     <Compile Include="Wpf.fs" />
     <Compile Include="Directives.fs" />
+    <Compile Include="EmFontSize.fs" />
     <Compile Include="Controls.fs" />
     <None Include="app.config" />
   </ItemGroup>
