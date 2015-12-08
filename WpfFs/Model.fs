@@ -5,6 +5,8 @@ open FSharp.ViewModule
 open System.Windows
 open RZ.Foundation;
 open FSharp.Core.Fluent
+open System.Windows.Input
+open System
 
 type MainWindowEvents =
   | Invalid
@@ -24,13 +26,20 @@ type MainWindowModel() as me =
 
     let eventCommand = me.Factory.EventValueCommand()
     let xamlFileName = me.Factory.Backing(<@ me.XamlViewFilename @>, System.String.Empty)
-    let navCommand = me.Factory.EventValueCommand(fun x -> System.Diagnostics.Debug.Print (x.ToString()); Invalid)
+
+    let dummyEvent = new Event<EventHandler,EventArgs>()
 
     let helpCommand = me.Factory.CommandSync(fun _ -> System.Diagnostics.Process.Start "http://google.com" |> ignore)
 
     let handleEvents = function
       | Invalid -> System.Diagnostics.Debug.Print "WARN: Invalid message detected!!"
       | SelectShow show -> me.XamlViewFilename <- show
+
+    let navCommand = { new ICommand with
+                         [<CLIEvent>]
+                         member x.CanExecuteChanged = dummyEvent.Publish
+                         member x.CanExecute _ = true
+                         member x.Execute o = tryCast<string>(o).map(SelectShow) |> Option.do' handleEvents }
 
     do
       me.EventStream
