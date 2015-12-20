@@ -35,11 +35,7 @@ type MainWindowModel() as me =
       | Invalid -> System.Diagnostics.Debug.Print "WARN: Invalid message detected!!"
       | SelectShow show -> me.XamlViewFilename <- show
 
-    let navCommand = { new ICommand with
-                         [<CLIEvent>]
-                         member x.CanExecuteChanged = dummyEvent.Publish
-                         member x.CanExecute _ = true
-                         member x.Execute o = tryCast<string>(o).map(SelectShow) |> Option.do' handleEvents }
+    let navCommand = me.Factory.EventValueCommand(Option.ofObj >> Option.map SelectShow >> Option.getOrElse (constant Invalid))
 
     do
       me.EventStream

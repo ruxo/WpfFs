@@ -63,6 +63,48 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Compile Include="Model.fs" />
+    <Compile Include="OldModel.fs" />
+    <Compile Include="Directives.fs" />
+    <Compile Include="UI\Codebehind.fs" />
+    <Compile Include="UI\DataBindingSampleView.fs" />
+    <Compile Include="Program.fs" />
+    <None Include="App.config" />
+    <Resource Include="AboutDialog.xaml" />
+    <Resource Include="MainWindow.xaml" />
+    <Resource Include="GridSharedSizeGroup.xaml" />
+    <Resource Include="RoutedEventInActionFront.xaml" />
+    <Resource Include="RoutedEventInAction.xaml" />
+    <Resource Include="DataBindingSample.xaml" />
+    <Resource Include="FlowDocumentSample.xaml" />
+    <None Include="paket.references" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WpfFs.Common\WpfFs.Common.fsproj">
+      <Name>WpfFs.Common</Name>
+      <Project>{39e97f56-cea0-4e55-889e-41a26dd619f4}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+    <ProjectReference Include="..\WpfFsControls\WpfFsControls.fsproj">
+      <Name>WpfFsControls</Name>
+      <Project>{662b6576-95b3-4b79-bb5b-4a9324d4334b}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="($(TargetFrameworkIdentifier) == 'WindowsPhoneApp') Or ($(TargetFrameworkIdentifier) == '.NETCore') Or ($(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')) Or ($(TargetFrameworkIdentifier) == 'WindowsPhone' And ($(TargetFrameworkVersion) == 'v8.0' Or $(TargetFrameworkVersion) == 'v8.1')) Or ($(TargetFrameworkIdentifier) == 'MonoAndroid') Or ($(TargetFrameworkIdentifier) == 'MonoTouch') Or ($(TargetFrameworkIdentifier) == 'Xamarin.iOS') Or ($(TargetFrameworkIdentifier) == 'Xamarin.Mac') Or ($(TargetFrameworkProfile) == 'Profile7') Or ($(TargetFrameworkProfile) == 'Profile31') Or ($(TargetFrameworkProfile) == 'Profile32') Or ($(TargetFrameworkProfile) == 'Profile44') Or ($(TargetFrameworkProfile) == 'Profile49') Or ($(TargetFrameworkProfile) == 'Profile78') Or ($(TargetFrameworkProfile) == 'Profile84') Or ($(TargetFrameworkProfile) == 'Profile111') Or ($(TargetFrameworkProfile) == 'Profile151') Or ($(TargetFrameworkProfile) == 'Profile157') Or ($(TargetFrameworkProfile) == 'Profile259')">
       <ItemGroup>
@@ -126,46 +168,4 @@
       </ItemGroup>
     </When>
   </Choose>
-  <ItemGroup>
-    <Compile Include="Model.fs" />
-    <Compile Include="OldModel.fs" />
-    <Compile Include="Directives.fs" />
-    <Compile Include="UI\Codebehind.fs" />
-    <Compile Include="UI\DataBindingSampleView.fs" />
-    <Compile Include="Program.fs" />
-    <None Include="App.config" />
-    <Resource Include="AboutDialog.xaml" />
-    <Resource Include="MainWindow.xaml" />
-    <Resource Include="GridSharedSizeGroup.xaml" />
-    <Resource Include="RoutedEventInActionFront.xaml" />
-    <Resource Include="RoutedEventInAction.xaml" />
-    <Resource Include="DataBindingSample.xaml" />
-    <Resource Include="FlowDocumentSample.xaml" />
-    <None Include="paket.references" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WpfFs.Common\WpfFs.Common.fsproj">
-      <Name>WpfFs.Common</Name>
-      <Project>{39e97f56-cea0-4e55-889e-41a26dd619f4}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="UIAutomationTypes" />
-    <Reference Include="WindowsBase" />
-    <ProjectReference Include="..\WpfFsControls\WpfFsControls.fsproj">
-      <Name>WpfFsControls</Name>
-      <Project>{662b6576-95b3-4b79-bb5b-4a9324d4334b}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

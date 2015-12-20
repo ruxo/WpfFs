@@ -34,10 +34,10 @@
   </Window.Resources>
   <DockPanel >
     <ListBox DockPanel.Dock="Left" MinWidth="{mk:EmFontSize 10}" Width="2in">
-      <Button Style="{StaticResource btn}" Command="{Binding NavCommand}" CommandParameter="AboutDialog.xaml">About sample</Button>
+      <Button Style="{StaticResource btn}" Command="{Binding NavCommand}" d:XamlFix.CommandParameter="AboutDialog.xaml">About sample</Button>
       <Expander Header="Layouts">
         <ListBox>
-          <Button Style="{StaticResource btn}" Command="{Binding NavCommand}">Grid: share side group</Button>
+          <Button Style="{StaticResource btn}" Command="{Binding NavCommand}" d:XamlFix.CommandParameter="GridSharedSizeGroup.xaml">Grid: share side group</Button>
         </ListBox>
       </Expander>
     </ListBox>
