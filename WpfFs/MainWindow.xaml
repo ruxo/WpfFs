@@ -15,7 +15,6 @@
     <model:MainWindowModel XamlViewFilename="AboutDialog.xaml" />
   </Window.DataContext>
   <Window.Resources>
-    <model:SelectConverter x:Key="selectConverter" />
     <Style x:Key="btn" TargetType="Button">
       <Setter Property="Template">
         <Setter.Value>
@@ -35,42 +34,27 @@
   <DockPanel >
     <ListBox DockPanel.Dock="Left" MinWidth="{mk:EmFontSize 10}" Width="2in">
       <Button Style="{StaticResource btn}" Command="{Binding NavCommand}" d:XamlFix.CommandParameter="AboutDialog.xaml">About sample</Button>
-      <Expander Header="Layouts">
+      <Expander Header="Layouts" IsExpanded="True">
         <ListBox>
           <Button Style="{StaticResource btn}" Command="{Binding NavCommand}" d:XamlFix.CommandParameter="GridSharedSizeGroup.xaml">Grid: share side group</Button>
         </ListBox>
       </Expander>
+      <Expander Header="Input" IsExpanded="True">
+        <ListBox>
+          <Button Style="{StaticResource btn}" Command="{Binding NavCommand}" d:XamlFix.CommandParameter="RoutedEventInActionFront.xaml">Routed Events</Button>
+        </ListBox>
+      </Expander>
+      <Expander Header="Data Binding" IsExpanded="True">
+        <ListBox>
+          <Button Style="{StaticResource btn}" Command="{Binding NavCommand}" d:XamlFix.CommandParameter="DataBindingSample.xaml">Collection Binding</Button>
+        </ListBox>
+      </Expander>
+      <Expander Header="Documents" IsExpanded="True">
+        <ListBox>
+          <Button Style="{StaticResource btn}" Command="{Binding NavCommand}" d:XamlFix.CommandParameter="FlowDocumentSample.xaml">Flow Document</Button>
+        </ListBox>
+      </Expander>
     </ListBox>
-    <TreeView DockPanel.Dock="Left" MinWidth="{mk:EmFontSize 10}" Width="2in"  HorizontalAlignment="Left">
-      
-      <TreeViewItem Header="About sample" Tag="AboutDialog.xaml">
-        <i:Interaction.Triggers><i:EventTrigger EventName="Selected"><fsx:EventToCommand Command="{Binding EventCommand}" EventArgsConverter="{StaticResource selectConverter}" /> </i:EventTrigger> </i:Interaction.Triggers>
-      </TreeViewItem>
-      <TreeViewItem Header="Layouts">
-        <TreeViewItem Header="Grid">
-          <TreeViewItem Header="Shared Size Group" Tag="GridSharedSizeGroup.xaml">
-            <i:Interaction.Triggers><i:EventTrigger EventName="Selected"><fsx:EventToCommand Command="{Binding EventCommand}" EventArgsConverter="{StaticResource selectConverter}" /> </i:EventTrigger> </i:Interaction.Triggers>
-          </TreeViewItem>
-        </TreeViewItem>
-      </TreeViewItem>
-
-      <!--
-      <TreeViewItem Header="Input Events">
-        <TreeViewItem Header="Routed Events">
-          <TreeViewItem Header="Bubble" Selected="RunRoutedEventInAction" />
-        </TreeViewItem>
-      </TreeViewItem>
-      <TreeViewItem Header="Data Binding">
-        <TreeViewItem Header="Collection Binding" Selected="RunDataBinding" />
-      </TreeViewItem>
-      <TreeViewItem Header="Documents">
-        <TreeViewItem Header="Flow Documents" Selected="ShowFlowDocument" />
-        <TreeViewItem Header="Fixed Documents (XPS)" />
-        <TreeViewItem Header="Custom Documents" />
-      </TreeViewItem>
-
-      -->
-    </TreeView>
     <rzwpf:Inclusion Xaml="{Binding Path=XamlViewFilename}" />
   </DockPanel>
 </Window>
