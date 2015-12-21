@@ -1,7 +1,7 @@
 ﻿namespace WpfFs.Models
 
 open FSharp.ViewModule
-open RZ.Foundation;
+open RZ.Foundation
 
 type MainWindowEvents =
   | Invalid

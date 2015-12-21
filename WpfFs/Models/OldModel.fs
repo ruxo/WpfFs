@@ -1,20 +1,6 @@
 ﻿namespace WpfFs.Models
 
 open System.Collections.ObjectModel
-open RZ.Foundation
-open RZ.Wpf
-open RZ.Wpf.Commands
-open System.Windows
-
-type RoutedEventInActionModel() =
-    inherit ViewModelBase()
-
-    member val ShowPopup = RelayCommand.BindCommand(fun _ ->
-      (XamlLoader.loadFromResource "RoutedEventInAction.xaml" None)
-        .get()
-        .cast<Window>()
-        .ShowDialog()
-      |> ignore)
 
 type Person() =
     member val Id = 0 with get, set
@@ -25,13 +11,13 @@ type PersonCollection() = inherit ObservableCollection<Person>()
 type DataBindingMode = SingleThread = 0 | MultiThread = 1
 type DataBindingCollectionMode = ObserverableCollection = 0 | WpfObservableCollection = 1
 
-type DatabindingSampleModel() =
-    inherit ViewModelBase()
+type DatabindingSampleModel() as me =
+    inherit FSharp.ViewModule.ViewModelBase()
 
-    let mutable data = PersonCollection()
-    let mutable bindingMode = DataBindingMode.SingleThread
+    let data = me.Factory.Backing(<@ me.Data @>, PersonCollection())
+    let bindingMode = me.Factory.Backing(<@ me.DataBindingMode @>, DataBindingMode.SingleThread)
 
-    member x.Data with get() = data and set(v) = x.setValue(&data, v, "Data")
-    member x.DataBindingMode with get() = bindingMode and set v = x.setValue(&bindingMode, v, "DataBindingMode")
+    member __.Data with get() = data.Value and set v = data.Value <- v
+    member __.DataBindingMode with get() = bindingMode.Value and set v = bindingMode.Value <- v
     member val CollectionMode = [DataBindingCollectionMode.ObserverableCollection; DataBindingCollectionMode.WpfObservableCollection] with get
 

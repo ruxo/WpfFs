@@ -7,6 +7,6 @@
     <model:RoutedEventInActionModel />
   </UserControl.DataContext>
   <DockPanel>
-    <Button d:Evt.ToCommand="Click -> ShowPopup">Click to show a modal dialog</Button>
+    <Button Command="{Binding ShowPopupCommand}">ShowPopup">Click to show a modal dialog</Button>
   </DockPanel> 
 </UserControl>
