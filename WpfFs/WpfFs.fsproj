@@ -64,8 +64,8 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Model.fs" />
-    <Compile Include="OldModel.fs" />
+    <Compile Include="Models\Model.fs" />
+    <Compile Include="Models\OldModel.fs" />
     <Compile Include="Directives.fs" />
     <Compile Include="UI\Codebehind.fs" />
     <Compile Include="UI\DataBindingSampleView.fs" />
