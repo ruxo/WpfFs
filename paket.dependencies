@@ -7,3 +7,4 @@ nuget FSharp.ViewModule.Core
 nuget RZ.F4.FsXaml.Wpf
 
 gist ruxo/a9244a6dfe5e73337261 common.fs
+gist ruxo/5e1e84865bafd17e3a34 pair.fs
