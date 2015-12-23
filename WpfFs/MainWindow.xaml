@@ -2,7 +2,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:fsx="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
     xmlns:rzwpf="clr-namespace:RZ.Wpf.Controls;assembly=WpfFsControls"
-    xmlns:model="clr-namespace:WpfFs.Models;assembly=WpfFs"
     xmlns:local="clr-namespace:WpfFs.UI;assembly=WpfFs"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=WpfFsControls"
@@ -12,7 +11,7 @@
     Title="WPF Show Case"
     >
   <Window.DataContext>
-    <model:MainWindowModel XamlViewFilename="AboutDialog.xaml" />
+    <local:MainWindowModel XamlViewFilename="AboutDialog.xaml" />
   </Window.DataContext>
   <Window.Resources>
     <Style x:Key="btn" TargetType="Button">

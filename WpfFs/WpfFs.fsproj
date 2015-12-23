@@ -64,7 +64,6 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Models\Model.fs" />
     <Compile Include="Models\RoutedEventInAction.fs" />
     <Compile Include="Models\OldModel.fs" />
     <Compile Include="Directives.fs" />
