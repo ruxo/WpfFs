@@ -31,7 +31,7 @@
     </Style>
   </Window.Resources>
   <DockPanel >
-    <local:ExpanderMenu Width="3in"></local:ExpanderMenu>
+    <local:ExpanderMenu Width="2in" ItemsSource="{Binding MenuItems}"></local:ExpanderMenu>
     <ListBox DockPanel.Dock="Left" MinWidth="{mk:EmFontSize 10}" Width="2in">
       <Button Style="{StaticResource btn}" Command="{Binding NavCommand}" d:XamlFix.CommandParameter="AboutDialog.xaml">About sample</Button>
       <Expander Header="Layouts" IsExpanded="True">
