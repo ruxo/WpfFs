@@ -13,10 +13,15 @@ type MainWindowEvents =
 
 module private MainWindowData =
   let menuDefault =
-    [ "Layouts",
-      ["Grid: share side group", "GridSharedSizeGroup.xaml"]
+    [ "Default",
+        ["Sample", "AboutDialog.xaml"]
+      "Layouts",
+        ["Grid: share side group", "GridSharedSizeGroup.xaml"]
       "Input",
-      ["Routed Events", "RoutedEventInActionFront.xaml"]
+        ["Routed Events", "RoutedEventInActionFront.xaml"]
+      "Data Binding", ["Collection Binding", "DataBindingSample.xaml"]
+      "Documents", ["Flow Document", "FlowDocumentSample.xaml"]
+
     ] :> ExpanderMenuItem seq 
 
 type MainWindowModel() as me =

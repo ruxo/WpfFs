@@ -1,6 +1,23 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Width="2in">
+  <UserControl.Resources>
+    <Style x:Key="btn" TargetType="Button">
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <TextBlock><ContentPresenter /></TextBlock>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+
+      <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="true">
+          <Setter Property="Foreground" Value="Blue" />
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+  </UserControl.Resources>
   <ListBox x:Name="item_container">
     <ListBox.ItemTemplate>
       <DataTemplate>
@@ -8,7 +25,8 @@
           <ListBox ItemsSource="{Binding Item2}">
             <ListBox.ItemTemplate>
               <DataTemplate>
-                <Button Content="{Binding Item1}" Command="Open" CommandParameter="{Binding Item2}"/>
+                <Button Style="{StaticResource btn}"
+                        Content="{Binding Item1}" Command="Open" CommandParameter="{Binding Item2}"/>
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
