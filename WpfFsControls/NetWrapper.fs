@@ -10,6 +10,7 @@ module Assembly =
     open System.Reflection
 
     let getManifestResourceStream resourceName asm = (asm:Assembly).GetManifestResourceStream(resourceName)
+    let getCallingAssembly() = System.Reflection.Assembly.GetCallingAssembly()
 
 module DirInfo =
     let getFiles pattern dir = (dir:DirectoryInfo).GetFiles pattern

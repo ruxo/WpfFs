@@ -47,7 +47,7 @@ module ResourceManager =
             | null -> Map.empty
             | stream -> readResourceStream stream
 
-    let private getResourceLookup = Utils.memoize getResourceLookup0
+    let getResourceLookup = Utils.memoize getResourceLookup0
 
     let findWpfResource (name: string) = getResourceLookup >> Map.tryFind (name.ToLower())
 
@@ -185,10 +185,12 @@ type IXamlConnector =
 
 [<RequireQualifiedAccess>]
 module XamlLoader =
+    open RZ.NetWrapper
+
     let locateType (typeName) =
         AppDomain.CurrentDomain.GetAssemblies().AsParallel()
         |> Seq.map (fun asm -> asm.GetType(typeName))
-        |> Seq.filter (fun t -> t <> null)
+        |> Seq.filter (not << isNull)
         |> Seq.head
 
     let private getRootObject<'a> (xaml) =

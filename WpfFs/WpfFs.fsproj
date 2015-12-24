@@ -64,15 +64,16 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Models\Model.fs" />
     <Compile Include="Models\RoutedEventInAction.fs" />
     <Compile Include="Models\OldModel.fs" />
     <Compile Include="Directives.fs" />
+    <Compile Include="UI\ExpanderMenu.fs" />
     <Compile Include="UI\Codebehind.fs" />
     <Compile Include="UI\DataBindingSampleView.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <Resource Include="AboutDialog.xaml" />
+    <Resource Include="ExpanderMenu.xaml" />
     <Resource Include="MainWindow.xaml" />
     <Resource Include="GridSharedSizeGroup.xaml" />
     <Resource Include="RoutedEventInActionFront.xaml" />

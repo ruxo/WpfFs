@@ -5,4 +5,4 @@ open WpfFs.UI
 
 [<STAThread>]
 [<EntryPoint>]
-MainWindow().Root |> Application().Run |> ignore
+MainWindow() |> Application().Run |> ignore
