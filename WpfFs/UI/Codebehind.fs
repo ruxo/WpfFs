@@ -11,8 +11,12 @@ type MainWindowEvents =
 type MainWindowModel() as me =
     inherit EventViewModelBase<MainWindowEvents>()
 
-    static let menuDefault = [ "Layouts", ("Grid: share side group", "GridSharedSizeGroup.xaml") ] 
-                              :> ExpanderMenuItem seq 
+    static let menuDefault =
+      [ "Layouts",
+        ["Grid: share side group", "GridSharedSizeGroup.xaml"]
+        "Input",
+        ["Routed Events", "RoutedEventInActionFront.xaml"]
+      ] :> ExpanderMenuItem seq 
 
     let eventCommand = me.Factory.EventValueCommand()
     let xamlFileName = me.Factory.Backing(<@ me.XamlViewFilename @>, System.String.Empty)
