@@ -1,17 +1,16 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:fsx="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
     xmlns:rzwpf="clr-namespace:RZ.Wpf.Controls;assembly=WpfFsControls"
     xmlns:local="clr-namespace:WpfFs.UI;assembly=WpfFs"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=WpfFsControls"
     xmlns:mk="clr-namespace:RZ.Wpf.Markups;assembly=WpfFsControls"
-    fsx:ViewController.Custom="{x:Type local:MainWindowController}"
     Width="12in" Height="8in"
     Title="WPF Show Case"
     >
   <Window.DataContext>
-    <local:MainWindowModel XamlViewFilename="AboutDialog.xaml" />
+    <local:MainWindowModel
+      XamlViewFilename="AboutDialog.xaml" />
   </Window.DataContext>
   <Window.Resources>
     <Style x:Key="btn" TargetType="Button">

@@ -1,27 +1,29 @@
 ﻿namespace WpfFs.UI
 
+open System.Windows
 open System.Windows.Input
+open FSharp.Core.Fluent
 open FSharp.ViewModule
 open RZ.Foundation
+open RZ.Wpf.CodeBehind
 
 type MainWindowEvents =
   | Invalid
   | SelectShow of string
 
+module private MainWindowData =
+  let menuDefault =
+    [ "Layouts",
+      ["Grid: share side group", "GridSharedSizeGroup.xaml"]
+      "Input",
+      ["Routed Events", "RoutedEventInActionFront.xaml"]
+    ] :> ExpanderMenuItem seq 
+
 type MainWindowModel() as me =
     inherit EventViewModelBase<MainWindowEvents>()
 
-    static let menuDefault =
-      [ "Layouts",
-        ["Grid: share side group", "GridSharedSizeGroup.xaml"]
-        "Input",
-        ["Routed Events", "RoutedEventInActionFront.xaml"]
-      ] :> ExpanderMenuItem seq 
-
     let eventCommand = me.Factory.EventValueCommand()
     let xamlFileName = me.Factory.Backing(<@ me.XamlViewFilename @>, System.String.Empty)
-
-    let helpCommand = me.Factory.CommandSync(fun _ -> System.Diagnostics.Process.Start "http://google.com" |> ignore)
 
     let handleEvents = function
       | Invalid -> System.Diagnostics.Debug.Print "WARN: Invalid message detected!!"
@@ -35,22 +37,24 @@ type MainWindowModel() as me =
       |> ignore
 
     member __.XamlViewFilename with get() = xamlFileName.Value and set v = xamlFileName.Value <- v
-    member __.MenuItems = menuDefault
-
-    member __.Help: INotifyCommand = helpCommand
+    member __.MenuItems = MainWindowData.menuDefault
 
     member __.EventCommand = eventCommand
     member __.NavCommand = navCommand
-    
 
-type MainWindow = FsXaml.XAML<"MainWindow.xaml", true>
+    member __.Process = handleEvents
 
-type MainWindowController() =
-  inherit FsXaml.WindowViewController<MainWindow>()
+type MainWindow() as me =
+  inherit Window()
+
+  do me.InitializeCodeBehind("MainWindow.xaml")
+  let model = me.DataContext.tryCast<MainWindowModel>().get()
 
   let startGoogle() = System.Diagnostics.Process.Start "http://google.com" |> ignore
+  let show = SelectShow >> model.Process
 
-  override __.OnInitialized window =
-    window.Root.CommandBindings.Add
-      <| CommandBinding(ApplicationCommands.Help, fun _ _ -> startGoogle())
-    |> ignore
+  let commandBindings =
+    [ CommandBinding(ApplicationCommands.Help, fun _ _ -> startGoogle())
+      CommandBinding(ApplicationCommands.Open, fun _ e -> show (e.Parameter |> cast<string>)) ]
+
+  do commandBindings |> Seq.iter (me.CommandBindings.Add >> ignore)
