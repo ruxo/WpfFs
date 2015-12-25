@@ -3,14 +3,12 @@
     xmlns:rzwpf="clr-namespace:RZ.Wpf.Controls;assembly=WpfFsControls"
     xmlns:local="clr-namespace:WpfFs.UI;assembly=WpfFs"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-    xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=WpfFsControls"
     xmlns:mk="clr-namespace:RZ.Wpf.Markups;assembly=WpfFsControls"
     Width="12in" Height="8in"
     Title="WPF Show Case"
     >
   <Window.DataContext>
-    <local:MainWindowModel
-      XamlViewFilename="AboutDialog.xaml" />
+    <local:MainWindowModel XamlViewFilename="AboutDialog.xaml" />
   </Window.DataContext>
   <DockPanel >
     <local:ExpanderMenu DockPanel.Dock="Left"

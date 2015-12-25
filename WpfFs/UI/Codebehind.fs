@@ -13,12 +13,10 @@ type MainWindowEvents =
 
 module private MainWindowData =
   let menuDefault =
-    [ "Default",
-        ["Sample", "AboutDialog.xaml"]
-      "Layouts",
-        ["Grid: share side group", "GridSharedSizeGroup.xaml"]
-      "Input",
-        ["Routed Events", "RoutedEventInActionFront.xaml"]
+    [ "Default", ["Sample", "AboutDialog.xaml"]
+      "Controls", ["Decorators", "DecoratorSample.xaml"]
+      "Layouts", ["Grid: share side group", "GridSharedSizeGroup.xaml"]
+      "Input", ["Routed Events", "RoutedEventInActionFront.xaml"]
       "Data Binding", ["Collection Binding", "DataBindingSample.xaml"]
       "Documents", ["Flow Document", "FlowDocumentSample.xaml"]
 

@@ -73,6 +73,7 @@
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <Resource Include="AboutDialog.xaml" />
+    <Resource Include="DecoratorSample.xaml" />
     <Resource Include="ExpanderMenu.xaml" />
     <Resource Include="MainWindow.xaml" />
     <Resource Include="GridSharedSizeGroup.xaml" />

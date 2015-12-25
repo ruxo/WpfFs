@@ -1,0 +1,66 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <UserControl.Resources>
+    <SolidColorBrush x:Key="setting_panel_bkg" Color="DarkGray"/>
+    <Style x:Key="setting_label" TargetType="Label">
+      <Setter Property="Width" Value="3cm" />
+      <Setter Property="Foreground" Value="DarkBlue" />
+    </Style>
+    <Style x:Key="content_margin">
+      <Setter Property="FrameworkElement.Margin" Value="0.1cm" />
+      <Setter Property="Border.Padding" Value="0.1cm" />
+    </Style>
+  </UserControl.Resources>
+  <StackPanel>
+    <Expander Header="Border" IsExpanded="True">
+      <DockPanel>
+        <Border DockPanel.Dock="Left"
+                Background="{StaticResource setting_panel_bkg}"
+                Width="8cm"
+                CornerRadius="5"
+                Style="{StaticResource content_margin}">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition />
+              <RowDefinition />
+              <RowDefinition />
+              <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0"  Style="{StaticResource setting_label}">Background</Label>
+            <TextBox Grid.Row="0" Grid.Column="1"  x:Name="border_bkg">Silver</TextBox>
+            <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource setting_label}">Border Color</Label>
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="border_color">Navy</TextBox>
+            <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource setting_label}">Border Thickness</Label>
+            <WrapPanel Grid.Row="2" Grid.Column="1">
+              <Label Content="{Binding Value, ElementName=border_thickness}" />
+              <Slider x:Name="border_thickness" Value="1" Width="4cm"
+                      Minimum="1" LargeChange="2" SmallChange="1"
+                      TickFrequency="1" IsSnapToTickEnabled="True"/>
+            </WrapPanel>
+            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource setting_label}">Corner</Label>
+            <WrapPanel Grid.Row="3" Grid.Column="1">
+              <Label Content="{Binding Value, ElementName=border_corner}" />
+              <Slider x:Name="border_corner" Value="5" Width="4cm"
+                      Minimum="1" Maximum="15"
+                      LargeChange="5" SmallChange="1"
+                      TickFrequency="1" IsSnapToTickEnabled="True"/>
+            </WrapPanel>
+          </Grid>
+        </Border>
+        <Border Background="{Binding Text, ElementName=border_bkg}"
+                Style="{StaticResource content_margin}"
+                BorderBrush="{Binding Text, ElementName=border_color}"
+                BorderThickness="{Binding Value, ElementName=border_thickness}"
+                CornerRadius="{Binding Value, ElementName=border_corner}"
+                Height="100" Width="100">
+          <Label Content="ANY SINGLE CONTROL"/>
+        </Border>
+      </DockPanel>
+    </Expander>
+  </StackPanel>
+</UserControl>
