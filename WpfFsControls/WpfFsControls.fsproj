@@ -53,6 +53,14 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
+    <Compile Include="..\paket-files\ruxo\5e1e84865bafd17e3a34\pair.fs">
+      <Paket>True</Paket>
+      <Link>paket-files/pair.fs</Link>
+    </Compile>
+    <Compile Include="..\paket-files\ruxo\a9244a6dfe5e73337261\common.fs">
+      <Paket>True</Paket>
+      <Link>paket-files/common.fs</Link>
+    </Compile>
     <Compile Include="NetWrapper.fs" />
     <Compile Include="Commands.fs" />
     <Compile Include="Wpf.fs" />
@@ -62,6 +70,7 @@
     <Compile Include="EmFontSize.fs" />
     <Compile Include="Controls.fs" />
     <None Include="app.config" />
+    <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -79,13 +88,6 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WpfFs.Common\WpfFs.Common.fsproj">
-      <Name>WpfFs.Common</Name>
-      <Project>{39e97f56-cea0-4e55-889e-41a26dd619f4}</Project>
-      <Private>True</Private>
-    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
