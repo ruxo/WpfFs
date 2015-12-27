@@ -1,16 +1,30 @@
-<?xml version="1.0"?>
-<package >
-  <metadata>
-    <id>RZ.Wpf</id>
-    <version>1.0.0</version>
-    <authors>Ruxo Zheng</authors>
-    <owners>Ruxo Zheng</owners>
-    <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
-    <projectUrl>https://github.com/ruxo/WpfFs</projectUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Alternative F# XAML processor</description>
-    <releaseNotes>Initial version</releaseNotes>
-    <copyright>Copyright 2015</copyright>
-    <tags>wpf xaml fsharp libary</tags>
-  </metadata>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>RZ.Wpf</id>
+        <version>1.0.0</version>
+        <title>FShap XAML processor library</title>
+        <authors>Ruxo Zheng</authors>
+        <owners>Ruxo Zheng</owners>
+        <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
+        <projectUrl>https://github.com/ruxo/WpfFs</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Alternative F# XAML processor</description>
+        <releaseNotes>Initial version</releaseNotes>
+        <copyright>Copyright 2015</copyright>
+        <tags>wpf xaml fsharp libary</tags>
+        <frameworkAssemblies>
+            <frameworkAssembly assemblyName="PresentationCore" targetFramework="" />
+            <frameworkAssembly assemblyName="PresentationFramework" targetFramework="" />
+            <frameworkAssembly assemblyName="System.Xaml" targetFramework="" />
+            <frameworkAssembly assemblyName="UIAutomationTypes" targetFramework="" />
+            <frameworkAssembly assemblyName="WindowsBase" targetFramework="" />
+            <frameworkAssembly assemblyName="System.Xml" targetFramework="" />
+            <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="" />
+        </frameworkAssemblies>
+        <dependencies>
+          <dependency id="FSharp.Core.Fluent-4.0" version="1.0.0.5" />
+          <dependency id="System.Windows.Interactivity.WPF" version="2.0.20525" />
+        </dependencies>
+    </metadata>
 </package>
