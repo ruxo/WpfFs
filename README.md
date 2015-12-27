@@ -29,5 +29,8 @@ type MainWindow() as me =
 
 It is longer, but it gives you flexibility to extend the control like in C# (e.g. make a User Control with custom properties).
 
+## Installation
+The library is available via [Nuget](https://www.nuget.org/packages/RZ.Wpf/).
+
 #### Other notes
 Examples in this project come from the reference of book "WPF 5 Unleashed"
