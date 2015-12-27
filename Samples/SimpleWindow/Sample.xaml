@@ -1,0 +1,8 @@
+﻿<Window xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation">
+  <Grid>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+      <Label FontSize="96">Hello, world!</Label>
+      <Button Click="ShowMessage" FontSize="48">Click me!</Button>
+    </StackPanel>
+  </Grid>
+</Window>

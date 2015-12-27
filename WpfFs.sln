@@ -17,6 +17,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WpfFs.Common", "Samples\Wpf
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WpfFs", "Samples\WpfFs\WpfFs.fsproj", "{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SimpleWindow", "Samples\SimpleWindow\SimpleWindow.fsproj", "{A71BA571-3FEC-4EF0-90BA-69988DB5994D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A71BA571-3FEC-4EF0-90BA-69988DB5994D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A71BA571-3FEC-4EF0-90BA-69988DB5994D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A71BA571-3FEC-4EF0-90BA-69988DB5994D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A71BA571-3FEC-4EF0-90BA-69988DB5994D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,5 +48,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{39E97F56-CEA0-4E55-889E-41A26DD619F4} = {27A4AFDF-6D7E-4EDF-A3F1-FCCA33C9B5F3}
 		{F1142FCF-BC7E-40A1-BFC0-EC5BF9512C17} = {27A4AFDF-6D7E-4EDF-A3F1-FCCA33C9B5F3}
+		{A71BA571-3FEC-4EF0-90BA-69988DB5994D} = {27A4AFDF-6D7E-4EDF-A3F1-FCCA33C9B5F3}
 	EndGlobalSection
 EndGlobal
