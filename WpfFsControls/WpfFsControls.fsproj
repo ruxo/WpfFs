@@ -8,7 +8,7 @@
     <ProjectGuid>662b6576-95b3-4b79-bb5b-4a9324d4334b</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>WpfFsControls</RootNamespace>
-    <AssemblyName>WpfFsControls</AssemblyName>
+    <AssemblyName>RZ.Wpf</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <Name>WpfFsControls</Name>
