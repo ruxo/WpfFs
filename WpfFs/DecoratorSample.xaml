@@ -1,6 +1,6 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mk="clr-namespace:RZ.Wpf.Markups;assembly=WpfFsControls">
+             xmlns:mk="clr-namespace:RZ.Wpf.Markups;assembly=RZ.Wpf">
   <UserControl.Resources>
     <SolidColorBrush x:Key="setting_panel_bkg" Color="DarkGray"/>
     <Style x:Key="setting_label" TargetType="Label">

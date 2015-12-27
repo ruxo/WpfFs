@@ -12,3 +12,4 @@ paket-files/
 paket.exe
 paket.targets
 paket.lock
+nuget/RZ.Wpf.dll
