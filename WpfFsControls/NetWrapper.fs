@@ -1,10 +1,12 @@
-﻿module RZ.NetWrapper
+﻿namespace RZ.NetWrapper
 
 open System
 open System.IO
 
-let (+=>) f g = f >> (>>) g // Read: put 1st param in f, 2nd in g, and then 2nd in f
-let dispose d = (d:IDisposable).Dispose()
+[<AutoOpen>]
+module Utils =
+  let (+=>) f g = f >> (>>) g // Read: put 1st param in f, 2nd in g, and then 2nd in f
+  let dispose d = (d:IDisposable).Dispose()
 
 module Assembly =
     open System.Reflection

@@ -8,8 +8,8 @@
     <ProjectGuid>662b6576-95b3-4b79-bb5b-4a9324d4334b</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>WpfFsControls</RootNamespace>
-    <AssemblyName>WpfFsControls</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <AssemblyName>RZ.Wpf</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <Name>WpfFsControls</Name>
     <TargetFrameworkProfile />
@@ -53,6 +53,14 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
+    <Compile Include="..\paket-files\ruxo\5e1e84865bafd17e3a34\pair.fs">
+      <Paket>True</Paket>
+      <Link>paket-files/pair.fs</Link>
+    </Compile>
+    <Compile Include="..\paket-files\ruxo\a9244a6dfe5e73337261\common.fs">
+      <Paket>True</Paket>
+      <Link>paket-files/common.fs</Link>
+    </Compile>
     <Compile Include="NetWrapper.fs" />
     <Compile Include="Commands.fs" />
     <Compile Include="Wpf.fs" />
@@ -62,6 +70,7 @@
     <Compile Include="EmFontSize.fs" />
     <Compile Include="Controls.fs" />
     <None Include="app.config" />
+    <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -73,19 +82,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WpfFs.Common\WpfFs.Common.fsproj">
-      <Name>WpfFs.Common</Name>
-      <Project>{39e97f56-cea0-4e55-889e-41a26dd619f4}</Project>
-      <Private>True</Private>
-    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -99,6 +100,22 @@
       <ItemGroup>
         <Reference Include="FSharp.Core.Fluent-4.0">
           <HintPath>..\packages\FSharp.Core.Fluent-4.0\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\FSharp.Core.Fluent-4.0.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
+      <ItemGroup>
+        <Reference Include="Microsoft.Expression.Interactions">
+          <HintPath>..\packages\System.Windows.Interactivity.WPF\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Windows.Interactivity">
+          <HintPath>..\packages\System.Windows.Interactivity.WPF\lib\net40\System.Windows.Interactivity.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

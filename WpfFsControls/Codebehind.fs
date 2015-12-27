@@ -1,9 +1,6 @@
 ﻿module RZ.Wpf.CodeBehind
 
-open System.Runtime.CompilerServices
-open System.Windows.Media
 open FSharp.Core.Fluent
-open RZ.NetWrapper
 open RZ.Foundation
 
 let private reportError (asm: System.Reflection.Assembly) resourceName: unit = 

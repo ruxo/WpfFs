@@ -12,3 +12,5 @@ paket-files/
 paket.exe
 paket.targets
 paket.lock
+nuget/lib/
+nuget/*.nupkg

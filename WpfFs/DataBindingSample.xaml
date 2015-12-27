@@ -1,6 +1,6 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
              xmlns:model="clr-namespace:WpfFs.Models;assembly=WpfFs"
-             xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=WpfFsControls"
+             xmlns:d="clr-namespace:RZ.Wpf.Directives;assembly=RZ.Wpf"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="WpfFs.UI.DataBindingSampleView"
              >
