@@ -50,11 +50,11 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="..\paket-files\ruxo\5e1e84865bafd17e3a34\pair.fs">
+    <Compile Include="..\..\paket-files\ruxo\5e1e84865bafd17e3a34\pair.fs">
       <Paket>True</Paket>
       <Link>paket-files/pair.fs</Link>
     </Compile>
-    <Compile Include="..\paket-files\ruxo\a9244a6dfe5e73337261\common.fs">
+    <Compile Include="..\..\paket-files\ruxo\a9244a6dfe5e73337261\common.fs">
       <Paket>True</Paket>
       <Link>paket-files/common.fs</Link>
     </Compile>
