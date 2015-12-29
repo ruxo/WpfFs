@@ -177,12 +177,6 @@ type WpfObservableCollection<'T>() as this =
 
 // ------------------------- WPF Loader ------------------------- //
 
-/// <summary>
-/// Provide ready signal when XAML is completely read.
-/// </summary>
-type IXamlConnector =
-    abstract Ready : unit -> unit
-
 [<RequireQualifiedAccess>]
 module XamlLoader =
     open RZ.NetWrapper
@@ -204,35 +198,25 @@ module XamlLoader =
             | null     -> failwithf "Type %s not found." attr.Value
             | rootType -> Some (Activator.CreateInstance(rootType) :?> 'a)
 
-    let private loadStreamInternal(reader: XamlXmlReader, rootObject) =
+    let private loadStreamInternal(reader: XamlXmlReader, rootObject: obj option) =
         let writerSettings = XamlObjectWriterSettings()
-        let connector = match rootObject with
-                        | Some root -> writerSettings.RootObjectInstance <- root
-                                       match (root :> obj) with
-                                       | :? IXamlConnector as c -> Some c
-                                       | _ -> None
-                        | None      -> None
+        match rootObject with
+        | Some root -> writerSettings.RootObjectInstance <- root
+        | None -> ()
 
         use writer = new XamlObjectWriter(reader.SchemaContext, writerSettings)
 
         while reader.Read() do
             writer.WriteNode(reader)
 
-        let result = writer.Result
-        match connector with
-        | None -> ()
-        | Some c ->
-            // prevent access to the interface's member before the instance is fully initialized.
-            let action = Action(fun() -> c.Ready())
-            ignore <| Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(action)
-        result
+        writer.Result
 
-    let private LoadWpfInternal xamlContent rootObject =
+    let private loadWpfInternal (xamlContent: string) (rootObject: obj option) :obj =
         let stream = new StringReader(xamlContent)
         use reader = new XamlXmlReader(stream, XamlReader.GetWpfSchemaContext())
         loadStreamInternal(reader, rootObject)
 
-    let loadWpfFromString xamlBody = LoadWpfInternal xamlBody (getRootObject(xamlBody))
+    let loadWpfFromString xamlBody = loadWpfInternal xamlBody (getRootObject(xamlBody))
 
     let private readTextFile f =
       if File.Exists f then
@@ -248,23 +232,23 @@ module XamlLoader =
     let LoadWpf xamlFilename rootObject = 
         let xamlContent = File.ReadAllText(xamlFilename)
 
-        LoadWpfInternal xamlContent rootObject
+        loadWpfInternal xamlContent rootObject
 
     let private showAllResources (asm: Reflection.Assembly) = String.Join("\n\t", asm.GetManifestResourceNames())
 
-    let loadXmlFromString (rootObj: 'a option) xaml =
+    let loadXmlFromString (rootObj: obj option) xaml =
       let text = new StringReader(xaml)
       let finalRoot = rootObj |> Option.orTry (fun() -> getRootObject xaml)
       use reader = new XamlXmlReader(text, XamlReader.GetWpfSchemaContext())
       loadStreamInternal(reader, finalRoot)
 
-    let loadFromResource0 resourceName (rootObj: 'a option) asm =
+    let loadFromResource0 resourceName (rootObj: obj option) asm =
         ResourceManager.findWpfResource resourceName asm
           |> Option.map (loadXmlFromString rootObj)
         
     let loadFromResource resourceName (rootObj: 'a option) =
         let asm = System.Reflection.Assembly.GetCallingAssembly()
-        in  loadFromResource0 resourceName rootObj asm
+        in  loadFromResource0 resourceName (rootObj |> Option.map cast<obj>) asm
 
 // ------------------------- DataContext method binder ------------------------- //
 type DCMethodExtension(methodName: string) =
