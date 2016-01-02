@@ -1,8 +1,46 @@
 ﻿module RZ.Wpf.CodeBehind
 
+open System.Windows.Input
 open FSharp.Core.Fluent
 open RZ.Foundation
 
+(********* Command Handler *********)
+type ICommandControlCenter =
+  abstract CanExecute: ICommand * obj -> bool
+  abstract Execute: ICommand * obj -> unit
+
+type ICommandHandler =
+  abstract ControlCenter: ICommandControlCenter
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module ICommandHandler =
+    let controlCenter (inf: ICommandHandler) = inf.ControlCenter
+
+type CommandHandler<'a> = (obj -> bool) * (obj -> 'a)
+type CommandMap<'a> = (ICommand * CommandHandler<'a>)
+
+let CommandControlCenter handler commandList =
+  let commandMap = System.Collections.Generic.Dictionary<ICommand,CommandHandler<'a>>()
+
+  commandList |> Seq.iter commandMap.Add
+
+  { new ICommandControlCenter with
+    member __.CanExecute(cmd, param) =
+      match commandMap.TryGetValue(cmd) with
+      | false, _ -> false
+      | true, (q, _) -> q param
+
+    member __.Execute(cmd, param) =
+      match commandMap.TryGetValue(cmd) with
+      | false, _ -> ()
+      | true, (_, c) -> handler <| c param
+  }
+
+module CommandMap =
+  let to' converter cmd :CommandMap<'a> = cmd, ((constant true), converter)
+  let check checker converter cmd :CommandMap<'a> = cmd, (checker, converter)
+
+(********* Code behind initializers *********)
 let private reportError (asm: System.Reflection.Assembly) resourceName: unit = 
   let availableResources =
     ResourceManager.getResourceLookup(asm)
@@ -26,3 +64,24 @@ type System.Windows.Media.Visual with
         |> Option.cata 
           (fun() -> reportError asm resourceName)
           (XamlLoader.loadXmlFromString (Some <| box rootObj) >> ignore)
+
+module private Internal =
+  let inline getCommandHandler(me: System.Windows.FrameworkElement) =
+    me.DataContext
+      .tryCast<ICommandHandler>()
+      .map(ICommandHandler.controlCenter)
+
+type System.Windows.FrameworkElement with
+  member me.ForwardCanExecute(e: CanExecuteRoutedEventArgs) =
+    Internal
+      .getCommandHandler(me)
+      .do'(fun handler -> e.CanExecute <- handler.CanExecute(e.Command, e.Parameter); e.Handled <- true)
+
+  member me.ForwardExecuted(e: ExecutedRoutedEventArgs) =
+    Internal
+      .getCommandHandler(me)
+      .do'(fun handler -> handler.Execute(e.Command, e.Parameter); e.Handled <- true)
+
+  member me.InstallCommandForwarder() =
+    CommandManager.AddCanExecuteHandler(me, fun _ e -> me.ForwardCanExecute(e))
+    CommandManager.AddExecutedHandler(me, fun _ e -> me.ForwardExecuted(e))

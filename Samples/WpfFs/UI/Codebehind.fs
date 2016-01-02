@@ -10,6 +10,7 @@ open RZ.Wpf.CodeBehind
 type MainWindowEvents =
   | Invalid
   | SelectShow of string
+  | Help
 
 module private MainWindowData =
   let menuDefault =
@@ -22,42 +23,32 @@ module private MainWindowData =
 
     ] :> ExpanderMenuItem seq 
 
-type MainWindowModel() as me =
-    inherit EventViewModelBase<MainWindowEvents>()
 
-    let eventCommand = me.Factory.EventValueCommand()
+type MainWindowModel() as me =
+    inherit ViewModelBase()
+
+    static let startGoogle() = System.Diagnostics.Process.Start "http://google.com" |> ignore
+
     let xamlFileName = me.Factory.Backing(<@ me.XamlViewFilename @>, System.String.Empty)
 
     let handleEvents = function
       | Invalid -> System.Diagnostics.Debug.Print "WARN: Invalid message detected!!"
       | SelectShow show -> me.XamlViewFilename <- show
+      | Help -> startGoogle()
 
-    let navCommand = me.Factory.EventValueCommand(Option.ofObj >> Option.map SelectShow >> Option.getOrElse (constant Invalid))
-
-    do
-      me.EventStream
-      |> Observable.subscribe handleEvents
-      |> ignore
+    let cmdCenter =
+      [ ApplicationCommands.Help |> CommandMap.to' (constant Help) 
+        ApplicationCommands.Open |> CommandMap.to' (SelectShow << cast<string>) ]
+      |> CommandControlCenter handleEvents
 
     member __.XamlViewFilename with get() = xamlFileName.Value and set v = xamlFileName.Value <- v
     member __.MenuItems = MainWindowData.menuDefault
 
-    member __.EventCommand = eventCommand
-    member __.NavCommand = navCommand
-
-    member __.Process = handleEvents
+    interface ICommandHandler with
+      member __.ControlCenter = cmdCenter
 
 type MainWindow() as me =
   inherit Window()
 
   do me.InitializeCodeBehind("MainWindow.xaml")
-  let model = me.DataContext.tryCast<MainWindowModel>().get()
-
-  let startGoogle() = System.Diagnostics.Process.Start "http://google.com" |> ignore
-  let show = SelectShow >> model.Process
-
-  let commandBindings =
-    [ CommandBinding(ApplicationCommands.Help, fun _ _ -> startGoogle())
-      CommandBinding(ApplicationCommands.Open, fun _ e -> show (e.Parameter |> cast<string>)) ]
-
-  do commandBindings |> Seq.iter (me.CommandBindings.Add >> ignore)
+  do me.InstallCommandForwarder()
