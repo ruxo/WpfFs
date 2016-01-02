@@ -2,15 +2,18 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>RZ.Wpf</id>
-        <version>1.0.0</version>
-        <title>FShap XAML processor library</title>
+        <version>1.0.1</version>
+        <title>FSharp XAML processor library</title>
         <authors>Ruxo Zheng</authors>
         <owners>Ruxo Zheng</owners>
         <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
         <projectUrl>https://github.com/ruxo/WpfFs</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Alternative F# XAML processor</description>
-        <releaseNotes>Initial version</releaseNotes>
+        <description>Alternative F# XAML processor and utilties</description>
+        <releaseNotes>
+          Introduce ICommandHandler and ICommandControlCenter in RZ.Wpf.Codebehind
+          to handle *Routed Events*.
+        </releaseNotes>
         <copyright>Copyright 2015</copyright>
         <tags>wpf xaml fsharp libary</tags>
         <frameworkAssemblies>
