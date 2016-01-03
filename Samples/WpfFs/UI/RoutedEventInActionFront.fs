@@ -38,15 +38,17 @@ type RoutedEventInActionFront() as me =
     let next = ((findColorIndex ((=)clr)) + 1) % colorShades.Length
     colorShades.[next]
 
+  let changeColor =
+    tryCast<Border>
+    >> Option.do' (fun border ->
+        let next = brushConverter.ConvertToString(border.Background) |> getNextColor
+        border.Background <- brushConverter.ConvertFromString(next).cast<Brush>())
+
   do me.InitializeCodeBehind("RoutedEventInActionFront.xaml")
      me.InstallCommandForwarder()
 
-  member __.ChangeColor(sender: obj, _: RoutedEventArgs) =
-    sender
-      .tryCast<Border>()
-      .do'(fun border ->
-        let next = brushConverter.ConvertToString(border.Background) |> getNextColor
-        border.Background <- brushConverter.ConvertFromString(next).cast<Brush>())
+  member __.ChangeColor(sender: obj, _: RoutedEventArgs) = changeColor sender
+  member __.ChangeColor2(sender: obj, _: ExecutedRoutedEventArgs) = changeColor sender
 
   member __.PreventEvents(_:obj, e:RoutedEventArgs) = e.Handled <- true
   member __.ShowPopup(_:obj, e:RoutedEventArgs) =

@@ -16,15 +16,19 @@
     </Style>
   </UserControl.Resources>
   <Grid>
-    <Border Background="Green" ButtonBase.Click="ChangeColor">
-      <Border Background="Yellow" ButtonBase.Click="ChangeColor">
-        <Border Background="Orange" ButtonBase.Click="ChangeColor">
-          <Border Background="Red" ButtonBase.Click="ChangeColor">
-            <Border Background="Brown" ButtonBase.Click="ChangeColor">
+    <Border Background="Green" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
+      <Border Background="Yellow" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
+        <Border Background="Orange" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
+          <Border Background="Red" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
+            <Border Background="Brown" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
               <StackPanel>
                 <Button Click="ShowPopup">Click to show a modal dialog [Direct]</Button>
-                <Button>Click to show a modal dialog [Routed Event]</Button>
+                <Button>Click to show effect of [Routed Event]</Button>
                 <Button Command="Open" Click="PreventEvents">Click to show a modal dialog [Command]</Button>
+                <TextBlock Width="3.5in" TextWrapping="Wrap">
+                  Command itself also uses routed event CommandManager.CanExecute and CommandManager.Executed 
+                  to query and execute command.
+                </TextBlock>
               </StackPanel>
             </Border>
           </Border>
