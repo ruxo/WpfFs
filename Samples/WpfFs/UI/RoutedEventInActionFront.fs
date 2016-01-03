@@ -50,6 +50,9 @@ type RoutedEventInActionFront() as me =
   member __.ChangeColor(sender: obj, _: RoutedEventArgs) = changeColor sender
   member __.ChangeColor2(sender: obj, _: ExecutedRoutedEventArgs) = changeColor sender
 
+  member __.RaisedAsCommand(sender: obj, e:RoutedEventArgs) =
+    ApplicationCommands.Open.Execute(null, sender :?> IInputElement)
+    e.Handled <- true
   member __.PreventEvents(_:obj, e:RoutedEventArgs) = e.Handled <- true
   member __.ShowPopup(_:obj, e:RoutedEventArgs) =
     RoutedEventInActionModel.ShowPopup()

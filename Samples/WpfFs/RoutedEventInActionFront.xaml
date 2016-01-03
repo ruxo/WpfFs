@@ -29,6 +29,7 @@
                   Command itself also uses routed event CommandManager.CanExecute and CommandManager.Executed 
                   to query and execute command.
                 </TextBlock>
+                <Button Click="RaisedAsCommand">Click to show a modal dialog [Manual Command]</Button>
               </StackPanel>
             </Border>
           </Border>
