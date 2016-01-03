@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>testfs</RootNamespace>
     <AssemblyName>WpfFs</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <Name>testfs</Name>
@@ -64,10 +64,10 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Models\RoutedEventInAction.fs" />
     <Compile Include="Models\OldModel.fs" />
     <Compile Include="Directives.fs" />
     <Compile Include="UI\ExpanderMenu.fs" />
+    <Compile Include="UI\RoutedEventInActionFront.fs" />
     <Compile Include="UI\Codebehind.fs" />
     <Compile Include="UI\DataBindingSampleView.fs" />
     <Compile Include="Program.fs" />

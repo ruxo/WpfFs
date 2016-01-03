@@ -1,10 +1,39 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:model="clr-namespace:WpfFs.Models;assembly=WpfFs">
+             xmlns:model="clr-namespace:WpfFs.UI;assembly=WpfFs"
+             x:Class="WpfFs.UI.RoutedEventInActionFront"
+             >
   <UserControl.DataContext>
     <model:RoutedEventInActionModel />
   </UserControl.DataContext>
-  <DockPanel>
-    <Button Command="{Binding ShowPopupCommand}">ShowPopup">Click to show a modal dialog</Button>
-  </DockPanel> 
+  <UserControl.Resources>
+    <Style TargetType="Border">
+      <Setter Property="Padding" Value="1cm" />
+    </Style>
+    <Style TargetType="Button">
+      <Setter Property="Margin" Value=".05cm" />
+      <Setter Property="Padding" Value=".1cm" />
+    </Style>
+  </UserControl.Resources>
+  <Grid>
+    <Border Background="Green" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
+      <Border Background="Yellow" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
+        <Border Background="Orange" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
+          <Border Background="Red" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
+            <Border Background="Brown" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
+              <StackPanel>
+                <Button Click="ShowPopup">Click to show a modal dialog [Direct]</Button>
+                <Button>Click to show effect of [Routed Event]</Button>
+                <Button Command="Open" Click="PreventEvents">Click to show a modal dialog [Command]</Button>
+                <TextBlock Width="3.5in" TextWrapping="Wrap">
+                  Command itself also uses routed event CommandManager.CanExecute and CommandManager.Executed 
+                  to query and execute command.
+                </TextBlock>
+              </StackPanel>
+            </Border>
+          </Border>
+        </Border>
+      </Border>
+    </Border>
+  </Grid> 
 </UserControl>

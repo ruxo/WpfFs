@@ -1,8 +1,14 @@
 ## Introduction
 
-This library is built as an alternative to use XAML in F#.  While `FsXaml`'s Type Provider is useful and simple, it does not give ease to work with XAML compared with C#.  I propose an alternative solution by following example.  Suppose we have a "Hello, World!" XAML as a project `Resource`.
+This library is built as an alternative to use XAML in F#.  
+
+### Nuget repository
+
+Library is available at [Nuget](https://www.nuget.org/packages/RZ.Wpf/)
 
 ### Code Behind in F#
+
+While `FsXaml`'s Type Provider is useful and simple, it does not give ease to work with XAML compared with C#.  I propose an alternative solution by following example.  Suppose we have a "Hello, World!" XAML as a project `Resource`.
 
 **Sample.xaml**
 ```xaml
@@ -82,6 +88,19 @@ type MainWindow() as me =
 ```
 
 With this sample, when you click the button it will raise command `Open` which will be forward to `ICommandHandler` via `DataContext`.  The `ICommandHandler` will return command handler which, in this case, is created by pre-defined function in the library.  Finally, the handler is called with the raised command accordingly.
+
+### XamlLoader changes (1.1.0)
+
+`XamlLoader` module is re-written and now has simple 4 functions to create/load XAML object.
+
+| Function                             | Description                          |
+| ------------------------------------ | ------------------------------------ |
+| `createFromFile: string -> obj option` | Load XAML from file and instantiate. |
+| `createFromResource: string -> Assembly -> obj option` | Load XAML from the assembly's resource |
+| `createFromXaml: string -> obj` | Create directly from XAML string. |
+| `createFromXamlObj: obj -> string -> obj` | Create directly from XAML string with root object. |
+
+Note that `createFromXaml` and `createFromXamlObj` functions do not return *option*.  These functions throw an exception if XAML text is malformed or incompatible with its code behind class.  This behavior is by design for most of usage, IMO, is in an application itself and bad XAML should be seriously fixed.
 
 #### Other notes
 Examples in this project come from the reference of book "WPF 5 Unleashed"

@@ -1,5 +1,4 @@
 ﻿namespace RZ.Wpf
-// v20151206
 
 open System
 open System.Collections.Specialized
@@ -9,47 +8,8 @@ open System.Xaml
 open System.Windows
 open System.Windows.Markup
 open System.Linq
+open FSharp.Core.Fluent
 open RZ.Foundation
-
-module Utils = 
-    let memoize (f: 'a -> 'b) =
-        let dict = System.Collections.Concurrent.ConcurrentDictionary<'a,'b>()
-
-        let memoizedFunc input =
-            match dict.TryGetValue input with
-            | true, x -> x
-            | false, _ ->
-                let answer = f input
-                dict.TryAdd(input, answer) |> ignore
-                answer
-        memoizedFunc
-
-(******************* Resources ************************)
-module ResourceManager =
-    open System.Reflection
-
-    let private getResourceLookup0 (asm: Assembly) =
-        let makeXamlString (stream: Stream) =
-            use reader = new StreamReader(stream)
-            in  reader.ReadToEnd()
-
-        let readResourceStream (stream: Stream) =
-            use reader = new System.Resources.ResourceReader(stream)
-            reader
-            |> Seq.cast :> seq<Collections.DictionaryEntry>
-            |> Seq.map (fun entry -> entry.Key :?> string, makeXamlString (entry.Value :?> Stream))
-            |> Map.ofSeq
-
-        let getWpfResourceName (asm: Assembly) = sprintf "%s.g.resources" <| asm.GetName().Name
-
-        let resourceName = getWpfResourceName asm
-        in  match asm.GetManifestResourceStream resourceName with
-            | null -> Map.empty
-            | stream -> readResourceStream stream
-
-    let getResourceLookup = Utils.memoize getResourceLookup0
-
-    let findWpfResource (name: string) = getResourceLookup >> Map.tryFind (name.ToLower())
 
 (******************* Timer ************************)
 module DispatcherTimer =
@@ -179,26 +139,28 @@ type WpfObservableCollection<'T>() as this =
 
 [<RequireQualifiedAccess>]
 module XamlLoader =
-    open RZ.NetWrapper
-
-    let locateType (typeName) =
-        AppDomain.CurrentDomain.GetAssemblies().AsParallel()
-        |> Seq.map (fun asm -> asm.GetType(typeName))
-        |> Seq.filter (not << isNull)
-        |> Seq.head
+    let private locateType (typeName) =
+        AppDomain
+          .CurrentDomain.GetAssemblies()
+          .AsParallel()
+          .choose(fun asm -> asm.GetType(typeName) |> Option.ofObj)
+          .tryHead()
 
     let private getRootObject<'a> (xaml) =
         let xml = XElement.Parse(xaml)
         let clsName = XName.Get("Class", "http://schemas.microsoft.com/winfx/2006/xaml")
-        let attr = xml.Attribute(clsName)
-        if attr = null then
-            None
-        else
-            match locateType(attr.Value) with
-            | null     -> failwithf "Type %s not found." attr.Value
-            | rootType -> Some (Activator.CreateInstance(rootType) :?> 'a)
+        xml.Attribute(clsName) 
+          |> Option.ofObj
+          |> Option.map(fun attr -> 
+                match locateType(attr.Value) with
+                | None          -> failwithf "Type %s not found." attr.Value
+                | Some rootType -> Activator.CreateInstance(rootType) :?> 'a
+             )
 
-    let private loadStreamInternal(reader: XamlXmlReader, rootObject: obj option) =
+    let private loadWpfInternal rootObject (xamlContent: string)  :obj =
+        let stream = new StringReader(xamlContent)
+        use reader = new XamlXmlReader(stream, XamlReader.GetWpfSchemaContext())
+
         let writerSettings = XamlObjectWriterSettings()
         match rootObject with
         | Some root -> writerSettings.RootObjectInstance <- root
@@ -211,13 +173,6 @@ module XamlLoader =
 
         writer.Result
 
-    let private loadWpfInternal (xamlContent: string) (rootObject: obj option) :obj =
-        let stream = new StringReader(xamlContent)
-        use reader = new XamlXmlReader(stream, XamlReader.GetWpfSchemaContext())
-        loadStreamInternal(reader, rootObject)
-
-    let loadWpfFromString xamlBody = loadWpfInternal xamlBody (getRootObject(xamlBody))
-
     let private readTextFile f =
       if File.Exists f then
         try
@@ -227,28 +182,14 @@ module XamlLoader =
       else
         None
 
-    let LoadWpfFromFile xamlFilename = readTextFile xamlFilename |> Option.map loadWpfFromString
+    let createFromXamlObj: obj -> string -> obj = Some >> loadWpfInternal
 
-    let LoadWpf xamlFilename rootObject = 
-        let xamlContent = File.ReadAllText(xamlFilename)
+    // assume that the class initializes *code behind* by itself.
+    let createFromXaml xaml = getRootObject(xaml).getOrElse(fun _ -> loadWpfInternal None xaml)
 
-        loadWpfInternal xamlContent rootObject
+    let createFromResource: string -> Reflection.Assembly -> obj option = ResourceManager.findWpfResource >>.>> (Option.map createFromXaml)
 
-    let private showAllResources (asm: Reflection.Assembly) = String.Join("\n\t", asm.GetManifestResourceNames())
-
-    let loadXmlFromString (rootObj: obj option) xaml =
-      let text = new StringReader(xaml)
-      let finalRoot = rootObj |> Option.orTry (fun() -> getRootObject xaml)
-      use reader = new XamlXmlReader(text, XamlReader.GetWpfSchemaContext())
-      loadStreamInternal(reader, finalRoot)
-
-    let loadFromResource0 resourceName (rootObj: obj option) asm =
-        ResourceManager.findWpfResource resourceName asm
-          |> Option.map (loadXmlFromString rootObj)
-        
-    let loadFromResource resourceName (rootObj: 'a option) =
-        let asm = System.Reflection.Assembly.GetCallingAssembly()
-        in  loadFromResource0 resourceName (rootObj |> Option.map cast<obj>) asm
+    let createFromFile = readTextFile >> Option.map createFromXaml
 
 // ------------------------- DataContext method binder ------------------------- //
 type DCMethodExtension(methodName: string) =

@@ -63,7 +63,7 @@ type System.Windows.Media.Visual with
     asm |> ResourceManager.findWpfResource resourceName
         |> Option.cata 
           (fun() -> reportError asm resourceName)
-          (XamlLoader.loadXmlFromString (Some <| box rootObj) >> ignore)
+          (XamlLoader.createFromXamlObj rootObj >> ignore)
 
 module private Internal =
   let inline getCommandHandler(me: System.Windows.FrameworkElement) =
