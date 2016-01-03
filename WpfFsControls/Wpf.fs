@@ -179,8 +179,6 @@ type WpfObservableCollection<'T>() as this =
 
 [<RequireQualifiedAccess>]
 module XamlLoader =
-    open RZ.NetWrapper
-
     let locateType (typeName) =
         AppDomain.CurrentDomain.GetAssemblies().AsParallel()
         |> Seq.map (fun asm -> asm.GetType(typeName))

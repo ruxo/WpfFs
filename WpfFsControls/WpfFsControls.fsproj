@@ -61,7 +61,6 @@
       <Paket>True</Paket>
       <Link>paket-files/common.fs</Link>
     </Compile>
-    <Compile Include="NetWrapper.fs" />
     <Compile Include="Commands.fs" />
     <Compile Include="Wpf.fs" />
     <Compile Include="Codebehind.fs" />
