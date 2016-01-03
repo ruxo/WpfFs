@@ -16,14 +16,15 @@
     </Style>
   </UserControl.Resources>
   <Grid>
-    <Border Background="Gray">
-      <Border Background="White">
-        <Border Background="Gray">
-          <Border Background="White">
-            <Border Background="Gray">
+    <Border Background="Green" ButtonBase.Click="ChangeColor">
+      <Border Background="Yellow" ButtonBase.Click="ChangeColor">
+        <Border Background="Orange" ButtonBase.Click="ChangeColor">
+          <Border Background="Red" ButtonBase.Click="ChangeColor">
+            <Border Background="Brown" ButtonBase.Click="ChangeColor">
               <StackPanel>
-                <Button Click="ShowPopup">Click to show a modal dialog with Routed Event</Button>
-                <Button Command="{Binding ShowPopupCommand}">Click to show a modal dialog with Command</Button>
+                <Button Click="ShowPopup">Click to show a modal dialog [Direct]</Button>
+                <Button>Click to show a modal dialog [Routed Event]</Button>
+                <Button Command="{Binding ShowPopupCommand}" Click="PreventEvents">Click to show a modal dialog [Command]</Button>
               </StackPanel>
             </Border>
           </Border>
