@@ -8,7 +8,7 @@ type RoutedEventInActionModel() as me =
   inherit ViewModelBase()
 
   let showPopup() =
-      (XamlLoader.loadFromResource "RoutedEventInAction.xaml" None)
+      (XamlLoader.loadFromResource None "RoutedEventInAction.xaml")
         .get()
         .cast<System.Windows.Window>()
         .ShowDialog()

@@ -242,13 +242,13 @@ module XamlLoader =
       use reader = new XamlXmlReader(text, XamlReader.GetWpfSchemaContext())
       loadStreamInternal(reader, finalRoot)
 
-    let loadFromResource0 resourceName (rootObj: obj option) asm =
+    let loadFromResource0 (rootObj: obj option) resourceName asm =
         ResourceManager.findWpfResource resourceName asm
           |> Option.map (loadXmlFromString rootObj)
         
-    let loadFromResource resourceName (rootObj: 'a option) =
-        let asm = System.Reflection.Assembly.GetCallingAssembly()
-        in  loadFromResource0 resourceName (rootObj |> Option.map cast<obj>) asm
+    let loadFromResource (rootObj: 'a option) resourceName =
+        System.Reflection.Assembly.GetCallingAssembly()
+          |> loadFromResource0 (rootObj |> Option.map cast<obj>) resourceName
 
 // ------------------------- DataContext method binder ------------------------- //
 type DCMethodExtension(methodName: string) =

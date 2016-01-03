@@ -13,7 +13,7 @@ type public Inclusion() as me =
     let designMode = DesignerProperties.GetIsInDesignMode me
 
     let loadUIElementFromResource filename =
-        System.Reflection.Assembly.GetEntryAssembly() |> XamlLoader.loadFromResource0 filename None
+        System.Reflection.Assembly.GetEntryAssembly() |> XamlLoader.loadFromResource0 None filename
 
     let loadUiElement filename =
         RZ.Wpf.XamlLoader.LoadWpfFromFile filename
