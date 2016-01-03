@@ -4,13 +4,15 @@ open System.Windows
 open System.Windows.Controls
 
 open WpfFs.Models
+open RZ.Wpf.CodeBehind
 
 type DataBindingSampleView() as me =
     inherit UserControl()
     let mutable running_id = 1
     let getId() = System.Threading.Interlocked.Increment(&running_id)
 
-    do  RZ.Wpf.XamlLoader.loadFromResource "DataBindingSample.xaml" (Some me) |> ignore
+    do me.InitializeCodeBehind("DataBindingSample.xaml")
+
     member private x.context with get() = me.DataContext :?> DatabindingSampleModel
 
     member x.Add10Items  (_:obj, _:RoutedEventArgs) =
