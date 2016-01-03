@@ -1,6 +1,6 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:model="clr-namespace:WpfFs.Models;assembly=WpfFs"
+             xmlns:model="clr-namespace:WpfFs.UI;assembly=WpfFs"
              x:Class="WpfFs.UI.RoutedEventInActionFront"
              >
   <UserControl.DataContext>
@@ -24,7 +24,7 @@
               <StackPanel>
                 <Button Click="ShowPopup">Click to show a modal dialog [Direct]</Button>
                 <Button>Click to show a modal dialog [Routed Event]</Button>
-                <Button Command="{Binding ShowPopupCommand}" Click="PreventEvents">Click to show a modal dialog [Command]</Button>
+                <Button Command="Open" Click="PreventEvents">Click to show a modal dialog [Command]</Button>
               </StackPanel>
             </Border>
           </Border>

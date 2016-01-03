@@ -1,10 +1,28 @@
 ﻿namespace WpfFs.UI
 
 open System.Windows
+open System.Windows.Input
+open System.Windows.Media
 open System.Windows.Controls
 open RZ.Foundation
+open RZ.Wpf
 open RZ.Wpf.CodeBehind
-open System.Windows.Media
+
+type RoutedEventInActionModel() =
+  let commandCenter =
+    [ ApplicationCommands.Open |> CommandMap.to' id ]
+    |> CommandControlCenter (fun _ -> RoutedEventInActionModel.ShowPopup())
+
+  interface ICommandHandler with
+    member __.ControlCenter = commandCenter
+
+  static member ShowPopup() =
+      (XamlLoader.createFromResource "RoutedEventInAction.xaml" <| System.Reflection.Assembly.GetExecutingAssembly())
+        .get()
+        .cast<System.Windows.Window>()
+        .ShowDialog()
+      |> ignore
+
 
 type RoutedEventInActionFront() as me =
   inherit UserControl()
@@ -21,6 +39,7 @@ type RoutedEventInActionFront() as me =
     colorShades.[next]
 
   do me.InitializeCodeBehind("RoutedEventInActionFront.xaml")
+     me.InstallCommandForwarder()
 
   member __.ChangeColor(sender: obj, _: RoutedEventArgs) =
     sender
@@ -31,5 +50,5 @@ type RoutedEventInActionFront() as me =
 
   member __.PreventEvents(_:obj, e:RoutedEventArgs) = e.Handled <- true
   member __.ShowPopup(_:obj, e:RoutedEventArgs) =
-    WpfFs.Models.RoutedEventInActionModel.ShowPopup()
+    RoutedEventInActionModel.ShowPopup()
     e.Handled <- true
