@@ -69,6 +69,7 @@
     <Compile Include="XamlFix.fs" />
     <Compile Include="Directives.fs" />
     <Compile Include="EmFontSize.fs" />
+    <Compile Include="BindCommand.fs" />
     <Compile Include="Controls.fs" />
     <Compile Include="AssemblyInfo.fs" />
     <None Include="app.config" />
