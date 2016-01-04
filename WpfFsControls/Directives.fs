@@ -5,24 +5,6 @@ open System.Windows
 open System.Windows.Data
 open System.Windows.Controls
 
-type Evt() =
-    static let setEvent (el: DependencyObject) (event: string) (property: string) =
-        let fe = el :?> FrameworkElement
-        let trigger = Interactivity.EventTrigger(EventName=event)
-        match fe.DataContext with
-        | null    -> () // failwith "DataContext must have been set"
-        | context -> let ct = context.GetType()
-                     let propGet = ct.GetProperty(property).GetGetMethod()
-                     let command = propGet.Invoke(context, null) :?> Input.ICommand
-                     let action = Interactivity.InvokeCommandAction(Command = command)
-                     trigger.Actions.Add(action)
-                     trigger.Attach(el)
-
-    static member SetToCommand(element: DependencyObject, value: string) =
-        match value.Split([|"->"|], System.StringSplitOptions.None) with
-        | [| event; property |] -> setEvent (element) (event.Trim()) (property.Trim())
-        | _                     -> failwith "Invalid command format"
-
 [<AllowNullLiteral>]
 type ModelBinderInfo() =
     member val Target = String.Empty with get, set
@@ -30,7 +12,7 @@ type ModelBinderInfo() =
 
     member x.ChangeDC (fe: FrameworkElement) =
         // specially for RadioButton
-        if fe.DataContext = null
+        if isNull fe.DataContext
             then BindingOperations.ClearBinding(fe, RadioButton.IsCheckedProperty)
             else let binding = Binding(x.Target, Source = fe.DataContext, Converter = x)
                  in  fe.SetBinding(RadioButton.IsCheckedProperty, binding) |> ignore

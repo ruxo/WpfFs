@@ -62,7 +62,6 @@
       <Link>paket-files/common.fs</Link>
     </Compile>
     <Compile Include="Utils.fs" />
-    <Compile Include="Commands.fs" />
     <Compile Include="ResourceManager.fs" />
     <Compile Include="Wpf.fs" />
     <Compile Include="Codebehind.fs" />
