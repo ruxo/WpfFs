@@ -5,7 +5,6 @@ nuget FAKE
 nuget FSharp.Core.Fluent-4.0
 nuget FSharp.ViewModule.Core
 nuget RZ.F4.FsXaml.Wpf
-nuget System.Windows.Interactivity.WPF
 
 gist ruxo/a9244a6dfe5e73337261 common.fs
 gist ruxo/5e1e84865bafd17e3a34 pair.fs
