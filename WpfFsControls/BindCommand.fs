@@ -9,19 +9,22 @@ open System
 open FSharp.Core.Fluent
 open RZ.Foundation
 
-type private RoutedEventForwarder<'a when 'a :> RoutedEventArgs>(command: ICommand) =
+type private RoutedEventForwarder<'a when 'a :> RoutedEventArgs>
+      (command: ICommand, commandParameter: string) =
   let routedCmd = command.tryCast<RoutedUICommand>()
 
   let raiseRoutedCommand e (target: IInputElement) (cmd: RoutedUICommand) =
-    if cmd.CanExecute(e, target) then
-      cmd.Execute(e, target)
+    let p = (commandParameter, e)
+    if cmd.CanExecute(p, target) then
+      cmd.Execute(p, target)
       true
     else
       false
 
   let raiseCommand e =
-    if command.CanExecute(e) then
-      command.Execute(e)
+    let p = (commandParameter, e)
+    if command.CanExecute(p) then
+      command.Execute(p)
       true
     else
       false
@@ -64,23 +67,25 @@ type BindCommand(cmd: ICommand) =
         Debug.WriteLine("Not a valid WPF event type!")
         None
 
-  static let createWrapper (cmd: ICommand) delType argType =
+  static let createWrapper (cmd: ICommand, cmdParam: string) delType argType =
     let ft = argType |> RoutedEventForwarder.of'
-    let wrapper = Activator.CreateInstance(ft, [| box cmd |])
+    let wrapper = Activator.CreateInstance(ft, [| box cmd; box cmdParam |])
     let m = ft.GetMethod("Invoke", BindingFlags.NonPublic|||BindingFlags.Instance)
     Delegate.CreateDelegate(delType, wrapper, m)
 
   static let createWrapper1 cmd delType = delType |> getArgType |> Option.map (createWrapper cmd delType)
 
-  let mutable command = cmd |> Option.ofObj
+  let mutable command = cmd
+  let mutable commandParameter = ""
 
   new() = BindCommand(null)
 
   [<ConstructorArgument("command")>]
   member __.Command with get() = command and set v = command <- v
+  member __.CommandParameter with get() = commandParameter and set v = commandParameter <- v
 
   override __.ProvideValue(serviceProvider) =
     getDelegateTypeFromEvent(serviceProvider)
-      .bind(createWrapper1 cmd)
+      .bind(createWrapper1 (command, commandParameter))
       .map(box)
       .get()
