@@ -10,9 +10,29 @@ open FSharp.Core.Fluent
 open RZ.Foundation
 
 type private RoutedEventForwarder<'a when 'a :> RoutedEventArgs>(command: ICommand) =
+  let routedCmd = command.tryCast<RoutedUICommand>()
+
+  let raiseRoutedCommand e (target: IInputElement) (cmd: RoutedUICommand) =
+    if cmd.CanExecute(e, target) then
+      cmd.Execute(e, target)
+      true
+    else
+      false
+
+  let raiseCommand e =
+    if command.CanExecute(e) then
+      command.Execute(e)
+      true
+    else
+      false
+
   member __.Invoke(sender:obj, e: 'a) =
-    Debug.WriteLine("Hell yeah!!!!")
-    e.Handled <- true
+    let iinput = sender.tryCast<IInputElement>()
+    let handled =
+      match iinput, routedCmd with
+      | Some i, Some c -> raiseRoutedCommand e i c
+      | _, _ -> raiseCommand e
+    e.Handled <- handled
 
 module private RoutedEventForwarder =
   let routedEventForwarder = typedefof<RoutedEventForwarder<_>>
