@@ -45,9 +45,7 @@
                   <i:Interaction.Triggers><i:EventTrigger EventName="Click"><i:InvokeCommandAction Command="Open" /></i:EventTrigger></i:Interaction.Triggers>
                   Click to show a modal dialog [Blend SDK]
                 </Button>
-                <Button Click="{rzmk:BindCommand Open}">
-                  Click to show a modal dialog with command [RZ.Wpf]
-                </Button>
+                <Button Click="{rzmk:BindCommand Open}">Click to show a modal dialog [RZ.Wpf binding]</Button>
               </StackPanel>
             </Border>
           </Border>
