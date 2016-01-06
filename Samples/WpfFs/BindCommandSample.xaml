@@ -17,6 +17,7 @@
         <Button Click="{rzmk:BindCommand Open, CommandParameter=Hiya}">Bind to default command: Open with a parameter</Button>
         <Button Click="{rzmk:BindCommand Open, CommandParameter=Hiya, EventArgumentConverter=ToUpper}"
                 MouseEnter="{rzmk:BindCommand Open, EventArgumentConverter=MouseToPoint}">Bind to default command: Open with a converter</Button>
+        <Button Click="{rzmk:BindCommand Open, EventArgumentConverter=PreventEvent}">Prevent command from raising</Button>
       </StackPanel>
     </Border>
   </DockPanel>

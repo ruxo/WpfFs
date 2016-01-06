@@ -25,6 +25,7 @@ type BindCommandSampleModel() as me =
 
   member __.ToUpper(param: string, _: RoutedEventArgs) = param.ToUpper()
   member __.MouseToPoint(_: string, e: MouseEventArgs) = e.GetPosition(e.Source.cast<IInputElement>())
+  member __.PreventEvent(_:string, e: RoutedEventArgs): obj = DependencyProperty.UnsetValue
 
 type BindCommandSample() as me =
   inherit UserControl()

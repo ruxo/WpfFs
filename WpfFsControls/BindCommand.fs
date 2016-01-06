@@ -20,14 +20,14 @@ type private RoutedEventForwarder<'a when 'a :> RoutedEventArgs>
            |> Option.orTry (fun() -> sender |> getFrameworkContentElementDC)
 
   static let getPublicMethod name o = o.GetType().GetMethod(name) |> Option.ofObj
+  static let verifyConverterSignature (m:MethodInfo) =
+    let p = m.GetParameters()
+    p.Length = 2 && p.[0].ParameterType = typeof<string> && p.[1].ParameterType.IsAssignableFrom(typeof<'a>)
+
   static let getConverter converterName dc =
-    match getPublicMethod converterName dc with
-    | None -> None
-    | Some m -> 
-      let p = m.GetParameters()
-      if p.Length = 2 && p.[0].ParameterType = typeof<string> && p.[1].ParameterType.IsAssignableFrom(typeof<'a>)
-        then Some (fun (param: string) (e: obj) -> m.Invoke(dc, [| box param; e |]))
-        else None
+    getPublicMethod converterName dc 
+    |> Option.filter verifyConverterSignature
+    |> Option.map (fun m -> (fun (param: string) (e: obj) -> m.Invoke(dc, [| box param; e |])))
 
   let raiseRoutedCommand p (target: IInputElement) (cmd: RoutedUICommand) =
     if cmd.CanExecute(p, target) then
@@ -52,11 +52,12 @@ type private RoutedEventForwarder<'a when 'a :> RoutedEventArgs>
        |> Option.map (fun f -> f commandParameter e)
        |> Option.getOrElse (fun() -> box commandParameter)
 
-    let handled =
-      match sender.tryCast<IInputElement>(), routedCmd with
-      | Some iinput, Some c -> raiseRoutedCommand param iinput c
-      | _, _ -> raiseCommand param
-    e.Handled <- handled
+    if not <| param.Equals(DependencyProperty.UnsetValue) then
+      let handled =
+        match sender.tryCast<IInputElement>(), routedCmd with
+        | Some iinput, Some c -> raiseRoutedCommand param iinput c
+        | _, _ -> raiseCommand param
+      e.Handled <- handled
 
 
 module private RoutedEventForwarder =
@@ -76,19 +77,18 @@ type BindCommand(cmd: ICommand) =
     |> Option.bind (fun o -> o.TargetProperty.tryCast<EventInfo>())
     |> Option.map (fun o -> o.EventHandlerType)
 
-  static let getArgType(delegateType: Type) =
-    match delegateType.GetMethod("Invoke") with
-    | null -> None
-    | m ->
+  static let verifyDelegateSignature(m:MethodInfo) =
       let p = m.GetParameters()
-      if m.ReturnType = typeof<System.Void>
-         && p.Length = 2 
-         && p.[0].ParameterType = typeof<obj> 
-         && typeof<RoutedEventArgs>.IsAssignableFrom(p.[1].ParameterType) then
-        Some p.[1].ParameterType
-      else
-        Debug.WriteLine("Not a valid WPF event type!")
-        None
+      m.ReturnType = typeof<System.Void>
+      && p.Length = 2 
+      && p.[0].ParameterType = typeof<obj> 
+      && typeof<RoutedEventArgs>.IsAssignableFrom(p.[1].ParameterType)
+
+  static let getArgType(delegateType: Type) =
+    delegateType.GetMethod("Invoke")
+      |> Option.ofObj
+      |> Option.filter(verifyDelegateSignature)
+      |> Option.map(fun m -> m.GetParameters().[1].ParameterType)
 
   static let createWrapper (cmd: ICommand, cmdParam: string, converter: string option) delType argType =
     let ft = argType |> RoutedEventForwarder.of'
