@@ -102,5 +102,52 @@ With this sample, when you click the button it will raise command `Open` which w
 
 Note that `createFromXaml` and `createFromXamlObj` functions do not return *option*.  These functions throw an exception if XAML text is malformed or incompatible with its code behind class.  This behavior is by design for most of usage, IMO, is in an application itself and bad XAML should be seriously fixed.
 
+### Event to command markup extension (1.1.1)
+
+This extension allows converting an event into a command directly without using Blend SDK.
+
+**Sample.xaml**
+```xaml
+<Window xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+        xmlns:rzmk="clr-namespace:RZ.Wpf.Markups;assembly=RZ.Wpf"
+        xmlns:model="clr-namespace:Sample;assembly=Sample">
+  <Window.DataContext>
+    <model:MainWindowModel />
+  </Window.DataContext>
+  <StackPanel>
+    <Label>Hello, world!</Label>
+    <Button Command="{rzmk:BindCommand Open, CommandParameter=http://google.com/}">Click me to fire Open command.</Button>
+  </StackPanel>
+</Window>
+```
+
+When the button is clicked, Open command will be raised with command parameter `"http://google.com/`.
+
+Event argument can be transformed and passed as command parameter as well by using `EventArgumentConverter` parameter.  For example:
+
+```xaml
+<Button Click="{rzmk:BindCommand Open, CommandParameter=Hiya, EventArgumentConverter=ToUpper}">Open command with 'HIYA'</Button>
+```
+
+`ToUpper` is a method in Data Context (this library is designed with Data Context cooperation in mind).
+
+```fsharp
+// snippet
+type BindCommandSampleModel() as me =
+  inherit ViewModelBase()
+
+  member __.ToUpper(param: string, e: RoutedEventArgs) = param.ToUpper()
+```
+
+First parameter of a converter must always be string.  The second parameter can be anything that is compatible with the event type.  For example, if binding with `MouseEnter` event, this second parameter can be `MouseEventArgs` type.  The return type of the converter can be anything but `DependencyProperty.UnsetValue`, it will directly be passed as a command parameter.
+
+If the return is `DependencyProperty.UnsetValue`, the event will not be handled and command will not be raised.
+
+#### Binding a custom command
+
+`BindCommand` extension has `CommandType` parameter that can be either `Standard`(default) or `ContextCommand`.  If it is set to `ContextCommand`, the specified command will be dynamically resolve at runtime with data context of the sender.
+
+See more examples in `BindCommandSample.xaml`.
+
 #### Other notes
 Examples in this project come from the reference of book "WPF 5 Unleashed"
