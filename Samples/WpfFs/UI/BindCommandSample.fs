@@ -16,18 +16,14 @@ type BindCommandSampleModel() as me =
   let cmdHandler =
     [ NavigationCommands.BrowseHome |> CommandMap.to' (constant "Browse Home")
       ApplicationCommands.Open |> CommandMap.to' (fun o -> o.ToString()) ]
-    |> CommandControlCenter ((+) "Got" >> logList.Value.Add)
+    |> CommandControlCenter ((+) "Got " >> logList.Value.Add)
 
   interface ICommandHandler with
     member __.ControlCenter = cmdHandler
 
   member __.LogList = logList.Value
 
-  member __.ToUpper(param: obj, _: RoutedEventArgs) =
-    match param with
-    | :? string as s -> s.ToUpper()
-    | null -> ""
-    | o -> o.ToString()
+  member __.ToUpper(param: string, _: RoutedEventArgs) = param.ToUpper()
 
 
 type BindCommandSample() as me =

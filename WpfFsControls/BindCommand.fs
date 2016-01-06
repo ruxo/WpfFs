@@ -13,16 +13,30 @@ type private RoutedEventForwarder<'a when 'a :> RoutedEventArgs>
       (command: ICommand, commandParameter: string, converter: string option) =
   let routedCmd = command.tryCast<RoutedUICommand>()
 
-  let raiseRoutedCommand e (target: IInputElement) (cmd: RoutedUICommand) =
-    let p = (commandParameter, e)
+  static let getFrameworkElementDC = tryCast<FrameworkElement> >> Option.bind (fun fe -> fe.DataContext |> Option.ofObj)
+  static let getFrameworkContentElementDC = tryCast<FrameworkContentElement> >> Option.bind (fun fe -> fe.DataContext |> Option.ofObj)
+  static let getDataContext (sender: obj) =
+    sender |> getFrameworkElementDC
+           |> Option.orTry (fun() -> sender |> getFrameworkContentElementDC)
+
+  static let getPublicMethod name o = o.GetType().GetMethod(name) |> Option.ofObj
+  static let getConverter converterName dc =
+    match getPublicMethod converterName dc with
+    | None -> None
+    | Some m -> 
+      let p = m.GetParameters()
+      if p.Length = 2 && p.[0].ParameterType = typeof<string> && p.[1].ParameterType.IsAssignableFrom(typeof<'a>)
+        then Some (fun (param: string) (e: obj) -> m.Invoke(dc, [| box param; e |]))
+        else None
+
+  let raiseRoutedCommand p (target: IInputElement) (cmd: RoutedUICommand) =
     if cmd.CanExecute(p, target) then
       cmd.Execute(p, target)
       true
     else
       false
 
-  let raiseCommand e =
-    let p = (commandParameter, e)
+  let raiseCommand p =
     if command.CanExecute(p) then
       command.Execute(p)
       true
@@ -30,11 +44,18 @@ type private RoutedEventForwarder<'a when 'a :> RoutedEventArgs>
       false
 
   member __.Invoke(sender:obj, e: 'a) =
-    let iinput = sender.tryCast<IInputElement>()
+    let param =
+      Some getConverter
+       |> Option.ap converter
+       |> Option.ap (getDataContext sender)
+       |> Option.join
+       |> Option.map (fun f -> f commandParameter e)
+       |> Option.getOrElse (fun() -> box commandParameter)
+
     let handled =
-      match iinput, routedCmd with
-      | Some i, Some c -> raiseRoutedCommand e i c
-      | _, _ -> raiseCommand e
+      match sender.tryCast<IInputElement>(), routedCmd with
+      | Some iinput, Some c -> raiseRoutedCommand param iinput c
+      | _, _ -> raiseCommand param
     e.Handled <- handled
 
 
