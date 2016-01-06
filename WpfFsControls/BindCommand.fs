@@ -10,7 +10,7 @@ open FSharp.Core.Fluent
 open RZ.Foundation
 
 type private RoutedEventForwarder<'a when 'a :> RoutedEventArgs>
-      (command: ICommand, commandParameter: string) =
+      (command: ICommand, commandParameter: string, converter: string option) =
   let routedCmd = command.tryCast<RoutedUICommand>()
 
   let raiseRoutedCommand e (target: IInputElement) (cmd: RoutedUICommand) =
@@ -37,10 +37,12 @@ type private RoutedEventForwarder<'a when 'a :> RoutedEventArgs>
       | _, _ -> raiseCommand e
     e.Handled <- handled
 
+
 module private RoutedEventForwarder =
   let routedEventForwarder = typedefof<RoutedEventForwarder<_>>
 
   let of' = RZ.Wpf.Utils.memoize (fun routedEventType -> routedEventForwarder.MakeGenericType([| routedEventType |]))
+
 
 [<MarkupExtensionReturnType(typeof<MethodInfo>)>]
 type BindCommand(cmd: ICommand) =
@@ -67,9 +69,9 @@ type BindCommand(cmd: ICommand) =
         Debug.WriteLine("Not a valid WPF event type!")
         None
 
-  static let createWrapper (cmd: ICommand, cmdParam: string) delType argType =
+  static let createWrapper (cmd: ICommand, cmdParam: string, converter: string option) delType argType =
     let ft = argType |> RoutedEventForwarder.of'
-    let wrapper = Activator.CreateInstance(ft, [| box cmd; box cmdParam |])
+    let wrapper = Activator.CreateInstance(ft, [| box cmd; box cmdParam; box converter |])
     let m = ft.GetMethod("Invoke", BindingFlags.NonPublic|||BindingFlags.Instance)
     Delegate.CreateDelegate(delType, wrapper, m)
 
@@ -77,15 +79,17 @@ type BindCommand(cmd: ICommand) =
 
   let mutable command = cmd
   let mutable commandParameter = ""
+  let mutable converter = None
 
   new() = BindCommand(null)
 
   [<ConstructorArgument("command")>]
   member __.Command with get() = command and set v = command <- v
   member __.CommandParameter with get() = commandParameter and set v = commandParameter <- v
+  member __.EventArgumentConverter with get() = converter.getOrElse(constant "") and set v = converter <- if String.IsNullOrWhiteSpace(v) then None else Some v
 
   override __.ProvideValue(serviceProvider) =
     getDelegateTypeFromEvent(serviceProvider)
-      .bind(createWrapper1 (command, commandParameter))
+      .bind(createWrapper1 (command, commandParameter, converter))
       .map(box)
       .get()

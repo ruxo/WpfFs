@@ -14,7 +14,8 @@
     <Border CornerRadius="3">
       <StackPanel>
         <Button Click="{rzmk:BindCommand BrowseHome}">Bind to default command: BrowseHome</Button>
-        <Button Click="{rzmk:BindCommand Open, CommandParameter=Hiya}">Bind to default command: Open with a converter</Button>
+        <Button Click="{rzmk:BindCommand Open, CommandParameter=Hiya}">Bind to default command: Open with a parameter</Button>
+        <Button Click="{rzmk:BindCommand Open, CommandParameter=Hiya, EventArgumentConverter=ToUpper}">Bind to default command: Open with a converter</Button>
       </StackPanel>
     </Border>
   </DockPanel>

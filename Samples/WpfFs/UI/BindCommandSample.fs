@@ -1,12 +1,12 @@
 ﻿namespace WpfFs.UI
 
-open System.Collections.Generic
+open System.Collections.ObjectModel
+open System.Windows
 open System.Windows.Input
 open System.Windows.Controls
+open FSharp.ViewModule
 open RZ.Foundation
 open RZ.Wpf.CodeBehind
-open FSharp.ViewModule
-open System.Collections.ObjectModel
 
 type BindCommandSampleModel() as me =
   inherit ViewModelBase()
@@ -22,6 +22,13 @@ type BindCommandSampleModel() as me =
     member __.ControlCenter = cmdHandler
 
   member __.LogList = logList.Value
+
+  member __.ToUpper(param: obj, _: RoutedEventArgs) =
+    match param with
+    | :? string as s -> s.ToUpper()
+    | null -> ""
+    | o -> o.ToString()
+
 
 type BindCommandSample() as me =
   inherit UserControl()

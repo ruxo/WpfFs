@@ -23,11 +23,14 @@ module private XamlFixImpl =
     (Some resetCommandParameter).ap(cmd).ap(param) |> ignore
 
 type XamlFix() =
+  static let getProperty (p:DependencyProperty) (d:DependencyObject) = d.GetValue(p)
+  static let setProperty (p:DependencyProperty) (d:DependencyObject, value: obj) = d.SetValue(p, value)
+  
   static let CommandParameterProperty =
     DependencyProperty.RegisterAttached("CommandParameter",
       typeof<obj>,
       typeof<XamlFix>,
       UIPropertyMetadata(XamlFixImpl.commandParameterChanged))
 
-  static member GetCommandParameter (d: DependencyObject) = d.GetValue(CommandParameterProperty)
-  static member SetCommandParameter (d: DependencyObject, value: obj) = d.SetValue(CommandParameterProperty, value)
+  static member GetCommandParameter d = d |> getProperty CommandParameterProperty
+  static member SetCommandParameter (d, value: obj) = (d, value) |> setProperty CommandParameterProperty
