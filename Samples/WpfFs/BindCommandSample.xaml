@@ -1,0 +1,25 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:rzmk="clr-namespace:RZ.Wpf.Markups;assembly=RZ.Wpf"
+             xmlns:model="clr-namespace:WpfFs.UI;assembly=WpfFs"
+             x:Class="WpfFs.UI.BindCommandSample">
+  <UserControl.DataContext>
+    <model:BindCommandSampleModel />
+  </UserControl.DataContext>
+  <DockPanel>
+    <Border DockPanel.Dock="Right" CornerRadius="20">
+      <ListBox MinWidth="3cm" ItemsSource="{Binding LogList}">
+      </ListBox>
+    </Border>
+    <Border CornerRadius="3">
+      <StackPanel>
+        <Button Click="{rzmk:BindCommand BrowseHome}">Bind to default command: BrowseHome</Button>
+        <Button Click="{rzmk:BindCommand Open, CommandParameter=Hiya}">Bind to default command: Open with a parameter</Button>
+        <Button Click="{rzmk:BindCommand Open, CommandParameter=Hiya, EventArgumentConverter=ToUpper}"
+                MouseEnter="{rzmk:BindCommand Open, EventArgumentConverter=MouseToPoint}">Bind to default command: Open with a converter</Button>
+        <Button Click="{rzmk:BindCommand Open, EventArgumentConverter=PreventEvent}">Prevent command from raising</Button>
+        <Button Click="{rzmk:BindCommand MyCustomCommand, CommandType=ContextCommand}">Fire a custom command</Button>
+      </StackPanel>
+    </Border>
+  </DockPanel>
+</UserControl>

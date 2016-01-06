@@ -17,7 +17,9 @@ module private MainWindowData =
     [ "Default", ["Sample", "AboutDialog.xaml"]
       "Controls", ["Decorators", "DecoratorSample.xaml"]
       "Layouts", ["Grid: share side group", "GridSharedSizeGroup.xaml"]
-      "Input", ["Routed Events", "RoutedEventInActionFront.xaml"]
+      "Input", 
+        ["Routed Events", "RoutedEventInActionFront.xaml"
+         "RZ.Wpf Command Binding", "BindCommandSample.xaml" ]
       "Data Binding", ["Collection Binding", "DataBindingSample.xaml"]
       "Documents", ["Flow Document", "FlowDocumentSample.xaml"]
 

@@ -70,9 +70,11 @@
     <Compile Include="UI\RoutedEventInActionFront.fs" />
     <Compile Include="UI\Codebehind.fs" />
     <Compile Include="UI\DataBindingSampleView.fs" />
+    <Compile Include="UI\BindCommandSample.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <Resource Include="AboutDialog.xaml" />
+    <Resource Include="BindCommandSample.xaml" />
     <Resource Include="DecoratorSample.xaml" />
     <Resource Include="ExpanderMenu.xaml" />
     <Resource Include="MainWindow.xaml" />

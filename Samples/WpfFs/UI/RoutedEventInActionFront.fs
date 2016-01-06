@@ -38,17 +38,21 @@ type RoutedEventInActionFront() as me =
     let next = ((findColorIndex ((=)clr)) + 1) % colorShades.Length
     colorShades.[next]
 
-  let changeColor =
+  let getLastColor clr =
+    let last = ((findColorIndex ((=)clr)) + colorShades.Length - 1) % colorShades.Length
+    colorShades.[last]
+
+  let changeColor fColor =
     tryCast<Border>
     >> Option.do' (fun border ->
-        let next = brushConverter.ConvertToString(border.Background) |> getNextColor
+        let next = brushConverter.ConvertToString(border.Background) |> fColor
         border.Background <- brushConverter.ConvertFromString(next).cast<Brush>())
 
   do me.InitializeCodeBehind("RoutedEventInActionFront.xaml")
      me.InstallCommandForwarder()
 
-  member __.ChangeColor(sender: obj, _: RoutedEventArgs) = changeColor sender
-  member __.ChangeColor2(sender: obj, _: ExecutedRoutedEventArgs) = changeColor sender
+  member __.ChangeColor(sender: obj, _: RoutedEventArgs) = sender |> changeColor getNextColor
+  member __.ChangeColor2(sender: obj, _: ExecutedRoutedEventArgs) = sender |> changeColor getLastColor
 
   member __.RaisedAsCommand(sender: obj, e:RoutedEventArgs) =
     ApplicationCommands.Open.Execute(null, sender :?> IInputElement)

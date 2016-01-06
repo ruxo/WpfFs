@@ -1,6 +1,8 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:model="clr-namespace:WpfFs.UI;assembly=WpfFs"
+             xmlns:rzmk="clr-namespace:RZ.Wpf.Markups;assembly=RZ.Wpf"
              x:Class="WpfFs.UI.RoutedEventInActionFront"
              >
   <UserControl.DataContext>
@@ -15,7 +17,16 @@
       <Setter Property="Padding" Value=".1cm" />
     </Style>
   </UserControl.Resources>
-  <Grid>
+  <DockPanel>
+    <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap"
+               FontFamily="Times New Roman"
+               FontSize="20"
+               FontStyle="Italic"
+               Foreground="DarkSlateBlue"
+               Width="5in">
+      Notice the color of borders when a button is clicked. If Button.Click event is raised, the border background colors will change
+      "inward". If ApplicationCommands.Open is raised, the border background colors will change "outward".
+    </TextBlock>
     <Border Background="Green" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
       <Border Background="Yellow" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
         <Border Background="Orange" ButtonBase.Click="ChangeColor" CommandManager.Executed="ChangeColor2">
@@ -30,11 +41,16 @@
                   to query and execute command.
                 </TextBlock>
                 <Button Click="RaisedAsCommand">Click to show a modal dialog [Manual Command]</Button>
+                <Button>
+                  <i:Interaction.Triggers><i:EventTrigger EventName="Click"><i:InvokeCommandAction Command="Open" /></i:EventTrigger></i:Interaction.Triggers>
+                  Click to show a modal dialog [Blend SDK]
+                </Button>
+                <Button Click="{rzmk:BindCommand Open}">Click to show a modal dialog [RZ.Wpf binding]</Button>
               </StackPanel>
             </Border>
           </Border>
         </Border>
       </Border>
     </Border>
-  </Grid> 
+  </DockPanel> 
 </UserControl>

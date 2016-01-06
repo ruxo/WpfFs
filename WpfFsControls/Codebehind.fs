@@ -83,5 +83,16 @@ type System.Windows.FrameworkElement with
       .do'(fun handler -> handler.Execute(e.Command, e.Parameter); e.Handled <- true)
 
   member me.InstallCommandForwarder() =
-    CommandManager.AddCanExecuteHandler(me, fun _ e -> me.ForwardCanExecute(e))
-    CommandManager.AddExecutedHandler(me, fun _ e -> me.ForwardExecuted(e))
+    let canExecuteHandler = CanExecuteRoutedEventHandler(fun _ e -> me.ForwardCanExecute(e))
+    let executeHandler = ExecutedRoutedEventHandler(fun _ e -> me.ForwardExecuted(e))
+    
+    me.Loaded.Add(fun _ ->
+      CommandManager.AddCanExecuteHandler(me, canExecuteHandler)
+      CommandManager.AddExecutedHandler(me, executeHandler)
+    )
+    me.Unloaded.Add(fun _ ->
+      CommandManager.RemoveCanExecuteHandler(me, canExecuteHandler)
+      CommandManager.RemoveExecutedHandler(me, executeHandler)
+    )
+
+    
