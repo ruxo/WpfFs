@@ -24,7 +24,7 @@ type BindCommandSampleModel() as me =
   member __.LogList = logList.Value
 
   member __.ToUpper(param: string, _: RoutedEventArgs) = param.ToUpper()
-
+  member __.MouseToPoint(_: string, e: MouseEventArgs) = e.GetPosition(e.Source.cast<IInputElement>())
 
 type BindCommandSample() as me =
   inherit UserControl()
