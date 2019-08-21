@@ -1,3 +1,5 @@
+*Update* This code base hasn't been maintained for years since there is better library at https://github.com/fsprojects/FsXaml.
+
 ## Introduction
 
 This library is built as an alternative to use XAML in F#.  
